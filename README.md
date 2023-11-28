@@ -1,4 +1,3 @@
-Certainly! Here's a short description for WareWise, an Inventory Management System built with Kivy MD:
 
 ---
 
@@ -22,4 +21,4 @@ Ready to elevate your inventory management game? Experience the future with Ware
 
 ---
 
-Feel free to customize this description further based on specific features or aspects you want to emphasize for your WareWise Inventory Management System.
+
