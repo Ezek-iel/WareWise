@@ -16,6 +16,7 @@ class NavigationContent(MDBoxLayout):
         super().__init__(*args, **kwargs)
         self.orientation = "vertical"
         self.pos_hint = {"center_y" : 1.0}
+
         self.userOption = OneLineIconListItem(IconLeftWidget(icon = "account"),text = "Suppliers")
         self.itemsOption = OneLineIconListItem(IconLeftWidget(icon = "cart"),text = "Items")
         self.productsOption = OneLineIconListItem(IconLeftWidget(icon = "devices"),text = "Products")
