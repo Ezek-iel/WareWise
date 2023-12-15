@@ -18,14 +18,16 @@ class NavigationContent(MDBoxLayout):
         self.pos_hint = {"center_y" : 1.0}
 
         self.userOption = OneLineIconListItem(IconLeftWidget(icon = "account"),text = "Suppliers")
-        self.itemsOption = OneLineIconListItem(IconLeftWidget(icon = "cart"),text = "Items")
+        self.resourcesOption = OneLineIconListItem(IconLeftWidget(icon = "cart"),text = "Items")
         self.productsOption = OneLineIconListItem(IconLeftWidget(icon = "devices"),text = "Products")
         self.databaseOption = OneLineIconListItem(IconLeftWidget(icon = "backup-restore"),text = "Restore")
+        self.settingsOption = OneLineIconListItem(IconLeftWidget(icon = "cog-outline"),text = "Settings")
         
         self.add_widget(self.userOption)
-        self.add_widget(self.itemsOption)
+        self.add_widget(self.resourcesOption)
         self.add_widget(self.productsOption)
         self.add_widget(self.databaseOption)
+        self.add_widget(self.settingsOption)
 
 class MainLayout(MDGridLayout):
     def __init__(self, *args, **kwargs):
@@ -41,8 +43,8 @@ class HomeCard(MDCard):
         self.style = "filled"
         #self.md_bg_color = "#eff0f2"
         self.innerLayout = MDRelativeLayout()
-        self.innerIcon = MDIconButton(icon = self.icon, pos_hint={"center_x": 0.5, "center_y": 0.5}, icon_size = "50dp")
-        self.innerLabel = MDLabel(text = self.text, pos_hint={"center_x": 0.9, "center_y": 0.2},)
+        self.innerIcon = MDIconButton(icon = self.icon, pos_hint={"center_x": 0.5, "center_y": 0.5}, icon_size = "50dp", size_hint = (1,1))
+        self.innerLabel = MDLabel(text = self.text, pos_hint={"center_x": 0.85, "center_y": 0.2},font_style = "H6")
         
         self.innerLayout.add_widget(self.innerLabel)
         self.innerLayout.add_widget(self.innerIcon)
@@ -66,14 +68,16 @@ class HomeScreen(MDScreen):
         self.userCard = HomeCard(icon = "account", text = " Suppliers")
         self.statsCard = HomeCard(icon = "chart-bell-curve-cumulative", text = "Stats")
         self.databaseCard = HomeCard(icon = "database", text = "Database Sync")
-        self.productsCard = HomeCard(icon = "devices", text = "Products Information")
-        self.itemsCard = HomeCard(icon = "cart", text = "Items")
+        self.productsCard = HomeCard(icon = "devices", text = "Products Info")
+        self.resourcesCard = HomeCard(icon = "rocket-launch-outline", text = "Resources")
+        self.itemCard = HomeCard(icon = "cart-plus", text = "Items")
 
         self.cardLayout.add_widget(self.userCard)
-        self.cardLayout.add_widget(self.itemsCard)
+        self.cardLayout.add_widget(self.resourcesCard)
         self.cardLayout.add_widget(self.productsCard)
         self.cardLayout.add_widget(self.statsCard)
         self.cardLayout.add_widget(self.databaseCard)
+        self.cardLayout.add_widget(self.itemCard)
         
         self.cardScreen.add_widget(self.cardLayout)
         self.cardScreen.add_widget(self.topbar)
