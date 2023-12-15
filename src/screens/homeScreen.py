@@ -1,3 +1,5 @@
+    # * All imports
+
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.card import MDCard
@@ -12,6 +14,10 @@ from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.list import OneLineIconListItem,IconLeftWidget
 
 class NavigationContent(MDBoxLayout):
+    """ 
+    * Content of the Left Navigation Bar 
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.orientation = "vertical"
@@ -30,12 +36,19 @@ class NavigationContent(MDBoxLayout):
         self.add_widget(self.settingsOption)
 
 class MainLayout(MDGridLayout):
+    """
+    * The main layout of the home screen  
+    ! The main layout is a (2 x 3) grid
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.spacing = ("20dp","50dp")
         self.padding = "80dp"
 
 class HomeCard(MDCard):
+    """
+    * A card constructor in the home screen
+    """
     def __init__(self, icon = None, text = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.icon = icon
@@ -52,6 +65,9 @@ class HomeCard(MDCard):
         self.add_widget(self.innerLayout)
 
 class HomeScreen(MDScreen):
+    """
+    * The main screen consisting of the Grid of cards and the left navigation bar
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
@@ -60,17 +76,20 @@ class HomeScreen(MDScreen):
         
         self.cardScreen = MDScreen()
         
+        # * Top app bar of the home screen
         self.topbar = MDTopAppBar(title = "WareWise",  left_action_items=[['menu', lambda x: self.open_nav(),"More Options"]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
         
-        self.cardLayout = MainLayout(cols= 3)
+        # * Grid of Cards
+        self.cardLayout = MainLayout(cols= 3) #* Grid itself
         self.userCard = HomeCard(icon = "account", text = " Suppliers")
         self.statsCard = HomeCard(icon = "chart-bell-curve-cumulative", text = "Stats")
         self.databaseCard = HomeCard(icon = "database", text = "Database Sync")
         self.productsCard = HomeCard(icon = "devices", text = "Products Info")
         self.resourcesCard = HomeCard(icon = "rocket-launch-outline", text = "Resources")
         self.itemCard = HomeCard(icon = "cart-plus", text = "Items")
+        
 
         self.cardLayout.add_widget(self.userCard)
         self.cardLayout.add_widget(self.resourcesCard)
@@ -83,6 +102,7 @@ class HomeScreen(MDScreen):
         self.cardScreen.add_widget(self.topbar)
 
 
+        # * The left navigation bar of the home screen
         self.navDrawer = MDNavigationDrawer(radius = (0,8,8,0))
         self.navcontent = NavigationContent()
         self.navDrawer.add_widget(self.navcontent)
@@ -96,10 +116,10 @@ class HomeScreen(MDScreen):
 
     
     def open_nav(self):
+        """
+        * Open the navbar on the click of the top app bar left button
+        """
         self.navDrawer.set_state("open")
-
-
-
 
 class WareWise(MDApp):
     def build(self):

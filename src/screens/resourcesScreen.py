@@ -1,3 +1,5 @@
+        #* All imports
+
 from readCsv import readcsv
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
@@ -18,7 +20,11 @@ from kivy.lang.builder import Builder
 kv = open("itemScreen.kv").read()
 
 
-class RecordInventoryButton(MDFloatingActionButtonSpeedDial):
+class RecordResourceButton(MDFloatingActionButtonSpeedDial):
+    """
+    * button used to trigger the add resource form, 
+    ! child of the root screen class
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.type = "standard"
@@ -26,6 +32,10 @@ class RecordInventoryButton(MDFloatingActionButtonSpeedDial):
         self.pos_hint = {"center_x" : 0.9, "center_y" : 0.07}  
 
 class FormField(MDTextField):
+    """
+    * A text field with the ability to validate text upon user input
+    ! Targeted for numeric purposes
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_text = self.check
@@ -39,31 +49,36 @@ class FormField(MDTextField):
             self.helper_text = "Value must be numeric"
 
 class AddItemForm(MDBoxLayout):
+    """
+    * The form that adds a resource to the database
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        
         self.spacing= "16dp"
         self.padding = "8dp"
         self.size_hint_y= None
         self.height= "315dp"
         self.orientation = "vertical"
 
-
-        self.productData = None
+        # * Data to be retrieved from the form
+        self.resourceData = None
         self.quantityData = None
         self.supplierData = None
         self.priceData = None
         
-        self.productFieldLayout = MDBoxLayout(spacing = "7dp")
-        self.productLabel = MDLabel(text = "Choose Product Type", pos_hint = {"center_y" : 0.2})
-        self.productField= MDFillRoundFlatIconButton(icon = "devices", text = "Product Type")
-        self.productField.bind(on_press = self.productOptions)
+        # * The resource type field in the form
+        self.resourceFieldLayout = MDBoxLayout(spacing = "7dp")
+        self.resourceLabel = MDLabel(text = "Choose Product Type", pos_hint = {"center_y" : 0.2})
+        self.resourceField= MDFillRoundFlatIconButton(icon = "devices", text = "Product Type")
+        self.resourceField.bind(on_press = self.productOptions)
 
         
-
+        # * The quantity field in the form
         #self.quantityField = MDTextField(helper_text = "Item quantity", helper_text_mode = "persistent")
         self.quantityField = FormField(hint_text = "Resource quantity", helper_text_mode = "persistent")
 
+        # * The supplier field in the form
         self.supplierFieldLayout = MDBoxLayout(spacing = "7dp")
         self.supplierLabel = MDLabel(text = "Choose Supplier", pos_hint = {"center_y" : 0.2})
         self.supplierField = MDFillRoundFlatIconButton(icon = "account",text = "Supplier")
@@ -71,9 +86,10 @@ class AddItemForm(MDBoxLayout):
 
         self.priceField = FormField(hint_text = "Resource price", helper_text_mode = "persistent")
         
-        self.productFieldLayout.add_widget(self.productField)
-        self.productFieldLayout.add_widget(self.productLabel)
-        self.add_widget(self.productFieldLayout)    
+
+        self.resourceFieldLayout.add_widget(self.resourceField)
+        self.resourceFieldLayout.add_widget(self.resourceLabel)
+        self.add_widget(self.resourceFieldLayout)    
         
         
         self.add_widget(self.quantityField)
@@ -83,45 +99,63 @@ class AddItemForm(MDBoxLayout):
         self.supplierFieldLayout.add_widget(self.supplierLabel)
         self.add_widget(self.supplierFieldLayout)
 
-    
-
-        self.productMenu = None
+        self.resourceMenu = None
+        self.supplierMenu = None
     
     def setSupplier(self,value):
         self.supplierLabel.text = value
         self.supplierData = value
             
     def setProduct(self,value):
-        self.productLabel.text = value
-        self.productData = value
+        self.resourceLabel.text = value
+        self.resourceData = value
 
     
     def productOptions(self, instance):
-        menu_items = [{"text" : f'Product {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"Product {i}": self.setProduct(x),
+        """
+        * A menu with a set of product types for the product field
+        TODO connect the options to an actual database
+        """
+        menu_items = [{"text" : f'Resource Type {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"Product {i}": self.setProduct(x),
         } for i in range(5)]
-        self.productMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
+        self.resourceMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
                                           ,width_mult = 4)
-        self.productMenu.open()
+        self.resourceMenu.open()
     
     def supplierOptions(self, instance):
+        """
+        * A menu with a set of supplier information for the supplier field
+        TODO connect the options to an actual database
+        """
         menu_items = [{"text" : f'Supplier {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x = f"Supplier {i}" : self.setSupplier(x)} for i in range(5)]
-        self.productMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
+        self.supplierMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
                                           ,width_mult = 4)
-        self.productMenu.open()
+        self.supplierMenu.open()
 
     def getData(self, instance):
+        """
+        * Get all the required data from the form
+        TODO properly implement this function
+        """
         self.quantityData = self.quantityField.text
         self.priceData = self.priceField.text
 
-        print(self.productData)
+        print(self.resourceData)
         print(self.quantityData)
         print(self.supplierData)
         print(self.priceData)
         
 
 class DataScreen(MDScreen):
+    """ 
+    * A screen containing all the resource data
+    ! A left navigation bar is also added
+    TODO connect to an actual database
+    """
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         self.mainLayout = MDNavigationLayout()
         self.screenManager = MDScreenManager()
         
@@ -163,6 +197,9 @@ class DataScreen(MDScreen):
         self.add_widget(self.mainLayout)
 
     def open_nav(self):
+        """
+        * Open the left navigation bar with the top bar left button
+        """
         self.navdrawer.set_state("open")
     
 
@@ -171,16 +208,16 @@ class WareWise(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.material_style = "M3"
-        self.data = {"New Order" : ["pencil","on_press",self.open_dialog]}    
+        self.data = {"New Resource" : ["pencil","on_press",self.open_dialog]}    
         self.addResourceForm = AddItemForm()
         self.addFormDialog = None
         return Builder.load_string(kv)
     
-    def submit(self):
-        pass
 
     def open_dialog(self, *args):
-
+        """
+        *open the add form dialog and create one if it does not exist
+        """
         if not self.addFormDialog:
             self.addFormDialog = MDDialog(
                 title = "Record Item",
