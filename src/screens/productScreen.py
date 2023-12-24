@@ -18,7 +18,7 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
 from kivy.lang.builder import Builder
 
-kv = open("kv/resourcesScreen.kv").read()
+kv = open("kv/productScreen.kv").read()
 
 class NavContent(MDBoxLayout):
     def __init__(self, *args, **kwargs):
@@ -27,20 +27,20 @@ class NavContent(MDBoxLayout):
         self.pos_hint = {"center_y" : 1.0}
 
         self.userOption = OneLineIconListItem(IconLeftWidget(icon = "account"),text = "Suppliers")
-        self.resourcesOption = OneLineIconListItem(IconLeftWidget(icon = "cart"),text = "Items")
+        self.resourceOption = OneLineIconListItem(IconLeftWidget(icon = "cart"),text = "Items")
         self.productsOption = OneLineIconListItem(IconLeftWidget(icon = "devices"),text = "Products")
         self.databaseOption = OneLineIconListItem(IconLeftWidget(icon = "backup-restore"),text = "Restore")
         self.settingsOption = OneLineIconListItem(IconLeftWidget(icon = "cog-outline"),text = "Settings")
         
         self.add_widget(self.userOption)
-        self.add_widget(self.resourcesOption)
+        self.add_widget(self.resourceOption)
         self.add_widget(self.productsOption)
         self.add_widget(self.databaseOption)
         self.add_widget(self.settingsOption)
 
-class RecordResourceButton(MDFloatingActionButtonSpeedDial):
+class RecordProductButton(MDFloatingActionButtonSpeedDial):
     """
-    * button used to trigger the add resource form, 
+    * button used to trigger the add product form, 
     ! child of the root screen class
     """
     def __init__(self, *args, **kwargs):
@@ -68,7 +68,7 @@ class FormField(MDTextField):
 
 class AddItemForm(MDBoxLayout):
     """
-    * The form that adds a resource to the database
+    * The form that adds a product to the database
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -80,21 +80,21 @@ class AddItemForm(MDBoxLayout):
         self.orientation = "vertical"
 
         # * Data to be retrieved from the form
-        self.resourceData = None
+        self.productData = None
         self.quantityData = None
         self.supplierData = None
         self.priceData = None
         
-        # * The resource type field in the form
-        self.resourceFieldLayout = MDBoxLayout(spacing = "7dp")
-        self.resourceLabel = MDLabel(text = "Choose Product Type", pos_hint = {"center_y" : 0.2})
-        self.resourceField= MDFillRoundFlatIconButton(icon = "devices", text = "Product Type")
-        self.resourceField.bind(on_press = self.resourceOptions)
+        # * The product type field in the form
+        self.productFieldLayout = MDBoxLayout(spacing = "7dp")
+        self.productLabel = MDLabel(text = "Choose Product Type", pos_hint = {"center_y" : 0.2})
+        self.productField= MDFillRoundFlatIconButton(icon = "devices", text = "Product Type")
+        self.productField.bind(on_press = self.productOptions)
 
         
         # * The quantity field in the form
         #self.quantityField = MDTextField(helper_text = "Item quantity", helper_text_mode = "persistent")
-        self.quantityField = FormField(hint_text = "Resource quantity", helper_text_mode = "persistent")
+        self.quantityField = FormField(hint_text = "product quantity", helper_text_mode = "persistent")
 
         # * The supplier field in the form
         self.supplierFieldLayout = MDBoxLayout(spacing = "7dp")
@@ -102,12 +102,12 @@ class AddItemForm(MDBoxLayout):
         self.supplierField = MDFillRoundFlatIconButton(icon = "account",text = "Supplier")
         self.supplierField.bind(on_press = self.supplierOptions)
 
-        self.priceField = FormField(hint_text = "Resource price", helper_text_mode = "persistent")
+        self.priceField = FormField(hint_text = "product price", helper_text_mode = "persistent")
         
 
-        self.resourceFieldLayout.add_widget(self.resourceField)
-        self.resourceFieldLayout.add_widget(self.resourceLabel)
-        self.add_widget(self.resourceFieldLayout)    
+        self.productFieldLayout.add_widget(self.productField)
+        self.productFieldLayout.add_widget(self.productLabel)
+        self.add_widget(self.productFieldLayout)    
         
         
         self.add_widget(self.quantityField)
@@ -117,28 +117,28 @@ class AddItemForm(MDBoxLayout):
         self.supplierFieldLayout.add_widget(self.supplierLabel)
         self.add_widget(self.supplierFieldLayout)
 
-        self.resourceMenu = None
+        self.productMenu = None
         self.supplierMenu = None
     
     def setSupplier(self,value):
         self.supplierLabel.text = value
         self.supplierData = value
             
-    def setResource(self,value):
-        self.resourceLabel.text = value
-        self.resourceData = value
+    def setProduct(self,value):
+        self.productLabel.text = value
+        self.productData = value
 
     
-    def resourceOptions(self, instance):
+    def productOptions(self, instance):
         """
-        * A menu with a set of resource types for the resource field
+        * A menu with a set of product types for the product field
         TODO connect the options to an actual database
         """
-        menu_items = [{"text" : f'Resource Type {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"Product {i}": self.setProduct(x),
+        menu_items = [{"text" : f'product Type {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"Product {i}": self.setProduct(x),
         } for i in range(5)]
-        self.resourceMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
+        self.productMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
                                           ,width_mult = 4)
-        self.resourceMenu.open()
+        self.productMenu.open()
     
     def supplierOptions(self, instance):
         """
@@ -158,7 +158,7 @@ class AddItemForm(MDBoxLayout):
         self.quantityData = self.quantityField.text
         self.priceData = self.priceField.text
 
-        print(self.resourceData)
+        print(self.productData)
         print(self.quantityData)
         print(self.supplierData)
         print(self.priceData)
@@ -166,7 +166,7 @@ class AddItemForm(MDBoxLayout):
 
 class DataScreen(MDScreen):
     """ 
-    * A screen containing all the resource data
+    * A screen containing all the product data
     ! A left navigation bar is also added
     TODO connect to an actual database
     """
@@ -184,7 +184,7 @@ class DataScreen(MDScreen):
             size_hint=(0.8, 0.9),
             use_pagination = True,
             column_data = [
-                ("Resource", dp(40)),
+                ("Product", dp(40)),
                 ("Quantity", dp(40)),
                 ("Supplier",dp(40)),
                 ("Status", dp(40)),
@@ -198,7 +198,7 @@ class DataScreen(MDScreen):
 
         )
         
-        self.topbar = MDTopAppBar(title = "WareWise [Resources Table]",left_action_items = [["menu", lambda x: self.open_nav(),"More Options"]])
+        self.topbar = MDTopAppBar(title = "WareWise [products Table]",left_action_items = [["menu", lambda x: self.open_nav(),"More Options"]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
         
@@ -229,8 +229,8 @@ class WareWise(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.material_style = "M3"
-        self.data = {"New Resource" : ["pencil","on_press",self.open_dialog]}    
-        self.addResourceForm = AddItemForm()
+        self.data = {"New product" : ["pencil","on_press",self.open_dialog]}    
+        self.addproductForm = AddItemForm()
         self.addFormDialog = None
         return Builder.load_string(kv)
     
@@ -244,8 +244,8 @@ class WareWise(MDApp):
                 title = "Record Item",
                 size_hint = (1,1),
                 type = "custom",
-                content_cls = self.addResourceForm,
-            buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addResourceForm.getData)]
+                content_cls = self.addproductForm,
+            buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addproductForm.getData)]
             )
 
         self.addFormDialog.open()
