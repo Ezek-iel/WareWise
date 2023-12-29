@@ -1,3 +1,5 @@
+from storage.database_actions import getallData, addSupplier
+
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.screen import MDScreen
@@ -16,7 +18,7 @@ from kivymd.uix.textfield import MDTextField
 from readCsv import supplierInfo
 from kivy.lang import Builder
 
-kv = open("supplierScreen.kv").read()
+kv = open("kv\\supplierScreen.kv").read()
 
 class RecordSupplierButton(MDFloatingActionButtonSpeedDial):
     def __init__(self, **kwargs):
@@ -79,20 +81,21 @@ class DataScreen(MDScreen):
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 
-        self.data_table = MDAnchorLayout(MDDataTable(
+        self.data_table = MDAnchorLayout(size_hint = (1, 0.9))
+        self.table = MDDataTable(
             size_hint = (0.8,0.9),
+            use_pagination = True,
             column_data = [
                 ("Name", dp(40)),
                 ("Address",dp(40)),
                 ("Resource Type",dp(40)),
             ],
-            row_data = [tuple(row) for row in supplierInfo],
+            row_data = [tuple(row) for row in getallData("suppliers")],
             elevation = 2
-        ),
-        
-        size_hint = (1,.9)
-
         )
+
+        self.data_table.add_widget(self.table)
+        
         self.innerScreen.add_widget(self.data_table)
         self.innerScreen.add_widget(self.topbar)
 
@@ -177,6 +180,8 @@ class AddItemForm(MDBoxLayout):
         print(self.nameData)
         print(self.resourceData)
         print(self.addressData)
+        
+        addSupplier(name = self.nameData, resource = self.resourceData, address = self.addressData)
 
 
 class WareWise(MDApp):
@@ -186,8 +191,20 @@ class WareWise(MDApp):
         self.data = {"New Resource" : ["pencil","on_press",self.open_dialog]}    
         self.theme_cls.material_style = "M3"
         self.addItemDialog= None
-        self.addResourceForm = AddItemForm()
-        return Builder.load_string(kv)
+        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}
+        self.addSupplierForm = AddItemForm()
+        self.mainScreen  = MDScreen()
+        self.dataScreen= DataScreen()
+        self.supplierButton = RecordSupplierButton(data = self.data, root_button_anim = True, hint_animation = True)
+        
+        self.mainScreen.add_widget(self.dataScreen)
+        self.mainScreen.add_widget(self.supplierButton)
+
+        return self.mainScreen
+    
+    def addTableRow(self,*args):
+        self.addSupplierForm.getData(*args)
+        self.dataScreen.table.row_data = getallData("suppliers")
     
     def open_dialog(self, instance):
         
@@ -196,8 +213,8 @@ class WareWise(MDApp):
                 title = "Record Item",
                 size_hint = (1,1),
                 type = "custom",
-                content_cls = self.addResourceForm,
-            buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addResourceForm.getData)]
+                content_cls = self.addSupplierForm,
+            buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addTableRow)]
             )
         self.addItemDialog.open()
         

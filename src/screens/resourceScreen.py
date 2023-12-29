@@ -1,4 +1,6 @@
         #* All imports
+
+from storage.database_actions import getallData, addResource, getSupplierNames
 from readCsv import readResourcesCsv
 
 from kivymd.app import MDApp
@@ -134,7 +136,7 @@ class AddItemForm(MDBoxLayout):
         * A menu with a set of resource types for the resource field
         TODO connect the options to an actual database
         """
-        menu_items = [{"text" : f'Resource Type {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"Product {i}": self.setProduct(x),
+        menu_items = [{"text" : f'Resource Type {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"Product {i}": self.setResource(x),
         } for i in range(5)]
         self.resourceMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
                                           ,width_mult = 4)
@@ -145,7 +147,7 @@ class AddItemForm(MDBoxLayout):
         * A menu with a set of supplier information for the supplier field
         TODO connect the options to an actual database
         """
-        menu_items = [{"text" : f'Supplier {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x = f"Supplier {i}" : self.setSupplier(x)} for i in range(5)]
+        menu_items = [{"text" : f'Supplier {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x = i : self.setSupplier(x)} for i in getSupplierNames()]
         self.supplierMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
                                           ,width_mult = 4)
         self.supplierMenu.open()
@@ -158,17 +160,13 @@ class AddItemForm(MDBoxLayout):
         self.quantityData = self.quantityField.text
         self.priceData = self.priceField.text
 
-        print(self.resourceData)
-        print(self.quantityData)
-        print(self.supplierData)
-        print(self.priceData)
-        
+        addResource(self.supplierData, self.resourceData, self.priceData, self.quantityData)
+        return (self.supplierData, self.resourceData, self.priceData, self.quantityData)
 
 class DataScreen(MDScreen):
     """ 
     * A screen containing all the resource data
     ! A left navigation bar is also added
-    TODO connect to an actual database
     """
     
     def __init__(self, *args, **kwargs):
@@ -180,23 +178,24 @@ class DataScreen(MDScreen):
         self.tableScreen = MDScreen()
         self.tableScreenLayout = MDBoxLayout(orientation = "vertical", padding = 20)
 
-        self.dataTable = MDAnchorLayout(MDDataTable(
+        self.dataTable = MDAnchorLayout()
+        self.dataTable.size_hint = (1 , 0.9)
+
+        self.table =  MDDataTable( 
             size_hint=(0.8, 0.9),
             use_pagination = True,
             column_data = [
-                ("Resource", dp(40)),
-                ("Quantity", dp(40)),
-                ("Supplier",dp(40)),
-                ("Status", dp(40)),
-                ("Price per Unit", dp(40))
+            ("Supplier", dp(40)),
+            ("Resource Type", dp(40)),
+            ("Date",dp(40)),
+            ("Unit Price", dp(40)),
+            ("Quantity", dp(40))
             ],
-            row_data = [tuple(row) for row in readResourcesCsv()],
+            row_data = getallData("resources"),
             elevation = 2,
-        ),
-    
-        size_hint = (1,0.9)
-
         )
+
+        self.dataTable.add_widget(self.table)
         
         self.topbar = MDTopAppBar(title = "WareWise [Resources Table]",left_action_items = [["menu", lambda x: self.open_nav(),"More Options"]])
         self.topbar.pos_hint = {"top" : 1}
@@ -232,8 +231,17 @@ class WareWise(MDApp):
         self.data = {"New Resource" : ["pencil","on_press",self.open_dialog]}    
         self.addResourceForm = AddItemForm()
         self.addFormDialog = None
-        return Builder.load_string(kv)
+        self.mainScreen = MDScreen()
+        self.dataScreen = DataScreen()
+        self.resourceButton = RecordResourceButton(data = self.data, root_button_anim = True, hint_animation = True)
+        self.mainScreen.add_widget(self.dataScreen)
+        self.mainScreen.add_widget(self.resourceButton)
+
+        return self.mainScreen
     
+    def addTableRow(self, *args):
+        self.addResourceForm.getData(*args)
+        self.dataScreen.table.row_data = getallData("resources")
 
     def open_dialog(self, *args):
         """
@@ -245,7 +253,7 @@ class WareWise(MDApp):
                 size_hint = (1,1),
                 type = "custom",
                 content_cls = self.addResourceForm,
-            buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addResourceForm.getData)]
+            buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addTableRow)]
             )
 
         self.addFormDialog.open()
