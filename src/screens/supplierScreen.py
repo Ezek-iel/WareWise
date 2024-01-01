@@ -1,4 +1,5 @@
 from storage.database_actions import getallData, addSupplier
+from storage.settings import getResourceTypes
 
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
@@ -15,7 +16,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.metrics import dp
 from kivymd.uix.textfield import MDTextField
-from readCsv import supplierInfo
+
 from kivy.lang import Builder
 
 kv = open("kv\\supplierScreen.kv").read()
@@ -162,8 +163,8 @@ class AddItemForm(MDBoxLayout):
         * A menu with a set of product types for the product field
         TODO connect the options to an actual database
         """
-        menu_items = [{"text" : f'Resource Type {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"Product {i}": self.setResource(x),
-        } for i in range(5)]
+        menu_items = [{"text" : f'{i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i}": self.setResource(x),
+        } for i in getResourceTypes()]
         self.resourceMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
                                           ,width_mult = 4)
         self.resourceMenu.open()
@@ -176,48 +177,45 @@ class AddItemForm(MDBoxLayout):
         """
         self.nameData = self.nameField.text
         self.addressData = self.addressField.text
-
-        print(self.nameData)
-        print(self.resourceData)
-        print(self.addressData)
         
         addSupplier(name = self.nameData, resource = self.resourceData, address = self.addressData)
 
+class SupplierScreen(MDScreen):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}  
+
+        self.addSupplierForm = AddItemForm()
+        self.addFormDialog = None
+
+        self.dataScreen = DataScreen()
+        self.resourceButton = RecordSupplierButton(data = self.data, root_button_anim = True, hint_animation = True)
+
+        self.add_widget(self.dataScreen)
+        self.add_widget(self.resourceButton)
+
+    def open_dialog(self, *args):
+        if not self.addFormDialog:
+            self.addFormDialog = MDDialog(
+                title ="Record Item",
+                size_hint = (1, 1),
+                type = "custom",
+                content_cls = self.addSupplierForm,
+                buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addTableRow)]
+            )
+        self.addFormDialog.open()
+    
+    def addTableRow(self, *args):
+        self.addSupplierForm.getData(*args)
+        self.dataScreen.table.row_data = getallData("suppliers")
 
 class WareWise(MDApp):
 
     def build(self):
-        self.theme_cls.theme_style = "Dark"
-        self.data = {"New Resource" : ["pencil","on_press",self.open_dialog]}    
+        self.theme_cls.theme_style = "Dark"    
         self.theme_cls.material_style = "M3"
-        self.addItemDialog= None
-        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}
-        self.addSupplierForm = AddItemForm()
-        self.mainScreen  = MDScreen()
-        self.dataScreen= DataScreen()
-        self.supplierButton = RecordSupplierButton(data = self.data, root_button_anim = True, hint_animation = True)
-        
-        self.mainScreen.add_widget(self.dataScreen)
-        self.mainScreen.add_widget(self.supplierButton)
-
-        return self.mainScreen
-    
-    def addTableRow(self,*args):
-        self.addSupplierForm.getData(*args)
-        self.dataScreen.table.row_data = getallData("suppliers")
-    
-    def open_dialog(self, instance):
-        
-        if not self.addItemDialog:
-            self.addItemDialog = MDDialog(
-                title = "Record Item",
-                size_hint = (1,1),
-                type = "custom",
-                content_cls = self.addSupplierForm,
-            buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addTableRow)]
-            )
-        self.addItemDialog.open()
-        
+        return SupplierScreen()
 
 if __name__ == "__main__":
     WareWise().run()

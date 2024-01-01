@@ -112,7 +112,7 @@ class SettingsLayout(MDBoxLayout):
                                           ,width_mult = 4)
         self.resourceTypeMenu.open()
 
-class MainScreen(MDScreen):
+class SettingScreen(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -143,11 +143,12 @@ class MainScreen(MDScreen):
         self.navDrawer.set_state("open")
 
 
+
 class WareWise(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.material_style = "M3"
-        return MainScreen()
+        return SettingScreen()
 
 if __name__ == "__main__":
     WareWise().run()

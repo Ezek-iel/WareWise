@@ -35,7 +35,7 @@ class NavigationContent(MDBoxLayout):
         self.add_widget(self.databaseOption)
         self.add_widget(self.settingsOption)
 
-class MainLayout(MDGridLayout):
+class HomeLayout(MDGridLayout):
     """
     * The main layout of the home screen  
     ! The main layout is a (2 x 3) grid
@@ -53,7 +53,7 @@ class HomeCard(MDCard):
         super().__init__(*args, **kwargs)
         self.icon = icon
         self.text = text
-        self.style = "filled"
+        self.style = "elevated"
         #self.md_bg_color = "#eff0f2"
         self.innerLayout = MDRelativeLayout()
         self.innerIcon = MDIconButton(icon = self.icon, pos_hint={"center_x": 0.5, "center_y": 0.5}, icon_size = "50dp", size_hint = (1,1))
@@ -82,7 +82,8 @@ class HomeScreen(MDScreen):
         self.topbar.elevation = 2
         
         # * Grid of Cards
-        self.cardLayout = MainLayout(cols= 3) #* Grid itself
+        self.cardLayout = HomeLayout(cols= 3) #* Grid itself
+        
         self.userCard = HomeCard(icon = "account", text = " Suppliers")
         self.statsCard = HomeCard(icon = "chart-bell-curve-cumulative", text = "Stats")
         self.databaseCard = HomeCard(icon = "database", text = "Database Sync")

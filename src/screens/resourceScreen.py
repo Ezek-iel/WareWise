@@ -2,7 +2,7 @@
 
 from storage.database_actions import getallData, addResource, getSupplierNames
 from storage.settings import getResourceTypes
-from readCsv import readResourcesCsv
+
 
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
@@ -222,6 +222,36 @@ class DataScreen(MDScreen):
         * Open the left navigation bar with the top bar left button
         """
         self.navdrawer.set_state("open")
+
+class ResourceScreen(MDScreen):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}  
+
+        self.addResourceForm = AddItemForm()
+        self.addFormDialog = None
+
+        self.dataScreen = DataScreen()
+        self.resourceButton = RecordResourceButton(data = self.data, root_button_anim = True, hint_animation = True)
+
+        self.add_widget(self.dataScreen)
+        self.add_widget(self.resourceButton)
+
+    def open_dialog(self, *args):
+        if not self.addFormDialog:
+            self.addFormDialog = MDDialog(
+                title ="Record Item",
+                size_hint = (1, 1),
+                type = "custom",
+                content_cls = self.addResourceForm,
+                buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addTableRow)]
+            )
+        self.addFormDialog.open()
+    
+    def addTableRow(self, *args):
+        self.addResourceForm.getData(*args)
+        self.dataScreen.table.row_data = getallData("resources")
     
 
 class WareWise(MDApp):
@@ -229,35 +259,7 @@ class WareWise(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.material_style = "M3"
-        self.data = {"New Resource" : ["pencil","on_press",self.open_dialog]}    
-        self.addResourceForm = AddItemForm()
-        self.addFormDialog = None
-        self.mainScreen = MDScreen()
-        self.dataScreen = DataScreen()
-        self.resourceButton = RecordResourceButton(data = self.data, root_button_anim = True, hint_animation = True)
-        self.mainScreen.add_widget(self.dataScreen)
-        self.mainScreen.add_widget(self.resourceButton)
-
-        return self.mainScreen
-    
-    def addTableRow(self, *args):
-        self.addResourceForm.getData(*args)
-        self.dataScreen.table.row_data = getallData("resources")
-
-    def open_dialog(self, *args):
-        """
-        *open the add form dialog and create one if it does not exist
-        """
-        if not self.addFormDialog:
-            self.addFormDialog = MDDialog(
-                title = "Record Item",
-                size_hint = (1,1),
-                type = "custom",
-                content_cls = self.addResourceForm,
-            buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addTableRow)]
-            )
-
-        self.addFormDialog.open()
+        return ResourceScreen()
 
 if __name__ == '__main__':
     WareWise().run()
