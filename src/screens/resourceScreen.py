@@ -1,6 +1,7 @@
         #* All imports
 
 from storage.database_actions import getallData, addResource, getSupplierNames
+from storage.settings import getResourceTypes
 from readCsv import readResourcesCsv
 
 from kivymd.app import MDApp
@@ -89,8 +90,8 @@ class AddItemForm(MDBoxLayout):
         
         # * The resource type field in the form
         self.resourceFieldLayout = MDBoxLayout(spacing = "7dp")
-        self.resourceLabel = MDLabel(text = "Choose Product Type", pos_hint = {"center_y" : 0.2})
-        self.resourceField= MDFillRoundFlatIconButton(icon = "devices", text = "Product Type")
+        self.resourceLabel = MDLabel(text = "Choose Resource Type", pos_hint = {"center_y" : 0.2})
+        self.resourceField= MDFillRoundFlatIconButton(icon = "devices", text = "Resource Types")
         self.resourceField.bind(on_press = self.resourceOptions)
 
         
@@ -136,8 +137,8 @@ class AddItemForm(MDBoxLayout):
         * A menu with a set of resource types for the resource field
         TODO connect the options to an actual database
         """
-        menu_items = [{"text" : f'Resource Type {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"Product {i}": self.setResource(x),
-        } for i in range(5)]
+        menu_items = [{"text" : f'{i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i}": self.setResource(x),
+        } for i in getResourceTypes()]
         self.resourceMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
                                           ,width_mult = 4)
         self.resourceMenu.open()

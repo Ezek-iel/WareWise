@@ -5,6 +5,9 @@ class TestDB(unittest.TestCase):
 
     tablenames = ["resources","suppliers","products"]
 
+    def test_checkConnection(self):
+        self.assertIsNotNone(database_actions.sampleConnection)
+
     def test_getAllData(self):
         checks = []
         for name in self.tablenames:

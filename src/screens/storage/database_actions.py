@@ -4,10 +4,25 @@ import time
 def get_date():
     return time.strftime("%d %b %Y")
 
+try:
+    sampleConnection = sqlite3.connect("storage\\database.db")
+
+except sqlite3.OperationalError as error:
+    sampleConnection = sqlite3.connect("database.db")
+
+sampleCursor = sampleConnection.cursor()
+
+sampleConnection.commit()
+sampleConnection.close()
 
 def getallData(tablename):
-     
-    connection = sqlite3.connect("storage\\database.db")
+    
+    try:
+        connection = sqlite3.connect("storage\\database.db")
+    
+    except sqlite3.OperationalError as error:
+        connection = sqlite3.connect("database.db")
+    
     cursor = connection.cursor()
 
 
@@ -17,7 +32,13 @@ def getallData(tablename):
     return data
 
 def addResource(supplier : int, product : int, pricePerUnit,quantity):
-    connection = sqlite3.connect("storage\\database.db")
+    
+    try:
+        connection = sqlite3.connect("storage\\database.db")
+    
+    except sqlite3.OperationalError as error:
+        connection = sqlite3.connect("database.db")
+    
     cursor = connection.cursor()
 
     
@@ -27,7 +48,13 @@ def addResource(supplier : int, product : int, pricePerUnit,quantity):
     connection.close()
 
 def addSupplier(name : str, resource : int, address : str = " "):
-    connection = sqlite3.connect("storage\\database.db")
+    
+    try:
+        connection = sqlite3.connect("storage\\database.db")
+    
+    except sqlite3.OperationalError as error:
+        connection = sqlite3.connect("database.db")
+
     cursor = connection.cursor()
 
     
@@ -37,7 +64,13 @@ def addSupplier(name : str, resource : int, address : str = " "):
     connection.close()
 
 def addProduct(productType : str, pricePerUnit : int, quantity : int):
-    connection = sqlite3.connect("storage\\database.db")
+    
+    try:
+        connection = sqlite3.connect("storage\\database.db")
+    
+    except sqlite3.OperationalError as error:
+        connection = sqlite3.connect("database.db")
+
     cursor = connection.cursor()
 
     

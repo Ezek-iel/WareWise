@@ -1,0 +1,17 @@
+{
+    "Product Types": [
+        "HeadLights",
+        "Engines",
+        "Battery",
+        "Water",
+        "Oranges"
+    ],
+    "Resource Types": [
+        "Carbon",
+        "Oxygen",
+        "Lithium",
+        "Hydrogen",
+        "Neon",
+        "Xenon"
+    ]
+}

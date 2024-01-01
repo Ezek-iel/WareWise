@@ -1,6 +1,7 @@
         #* All imports
 
 from storage.database_actions import getallData, addProduct, getSupplierNames
+from storage.settings import getProductTypes
 from readCsv import readResourcesCsv
 
 from kivymd.app import MDApp
@@ -122,8 +123,8 @@ class AddItemForm(MDBoxLayout):
         * A menu with a set of product types for the product field
         TODO connect the options to an actual database
         """
-        menu_items = [{"text" : f'product Type {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"Product {i}": self.setProduct(x),
-        } for i in range(5)]
+        menu_items = [{"text" : f'{i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i}": self.setProduct(x),
+        } for i in getProductTypes()]
         self.productMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
                                           ,width_mult = 4)
         self.productMenu.open()
