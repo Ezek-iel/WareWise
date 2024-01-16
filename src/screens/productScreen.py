@@ -20,26 +20,9 @@ from kivymd.uix.textfield import MDTextField
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
 from kivy.lang.builder import Builder
+from components import NavContent, FormTextField
 
 kv = open("kv/productScreen.kv").read()
-
-class NavContent(MDBoxLayout):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.orientation = "vertical"
-        self.pos_hint = {"center_y" : 1.0}
-
-        self.userOption = OneLineIconListItem(IconLeftWidget(icon = "account"),text = "Suppliers")
-        self.resourceOption = OneLineIconListItem(IconLeftWidget(icon = "cart"),text = "Items")
-        self.productsOption = OneLineIconListItem(IconLeftWidget(icon = "devices"),text = "Products")
-        self.databaseOption = OneLineIconListItem(IconLeftWidget(icon = "backup-restore"),text = "Restore")
-        self.settingsOption = OneLineIconListItem(IconLeftWidget(icon = "cog-outline"),text = "Settings")
-        
-        self.add_widget(self.userOption)
-        self.add_widget(self.resourceOption)
-        self.add_widget(self.productsOption)
-        self.add_widget(self.databaseOption)
-        self.add_widget(self.settingsOption)
 
 class RecordProductButton(MDFloatingActionButtonSpeedDial):
     """
@@ -52,22 +35,7 @@ class RecordProductButton(MDFloatingActionButtonSpeedDial):
         self.root_button_anim = True
         self.pos_hint = {"center_x" : 0.9, "center_y" : 0.07}  
 
-class FormTextField(MDTextField):
-    """
-    * A text field with the ability to validate text upon user input
-    ! Targeted for numeric purposes
-    """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.set_text = self.check
-    
-    def check(self, instance, text):
-        if len(text) == 0 or text.isnumeric():
-            self.error = False
-            self.helper_text = ""
-        else:
-            self.error = True
-            self.helper_text = "Value must be numeric"
+
 
 class AddItemForm(MDBoxLayout):
     """
@@ -95,7 +63,6 @@ class AddItemForm(MDBoxLayout):
 
         
         # * The quantity field in the form
-        #self.quantityField = MDTextField(helper_text = "Item quantity", helper_text_mode = "persistent")
         self.quantityField = FormTextField(hint_text = "Product quantity", helper_text_mode = "persistent")
 
         # * The supplier field in the form
@@ -113,6 +80,9 @@ class AddItemForm(MDBoxLayout):
         self.productMenu = None
             
     def setProduct(self,value):
+        """
+        * Set the text beside the product button and also the product data
+        """
         self.productLabel.text = value
         self.productData = value
 
@@ -120,7 +90,7 @@ class AddItemForm(MDBoxLayout):
     def productOptions(self, instance):
         """
         * A menu with a set of product types for the product field
-        TODO connect the options to an actual database
+        //TODO connect the options to an actual database
         """
         menu_items = [{"text" : f'{i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i}": self.setProduct(x),
         } for i in getProductTypes()]
@@ -131,7 +101,7 @@ class AddItemForm(MDBoxLayout):
     def getData(self, instance):
         """
         * Get all the required data from the form
-        TODO properly implement this function
+        //TODO properly implement this function
         """
         self.quantityData = self.quantityField.text
         self.priceData = self.priceField.text
@@ -151,6 +121,9 @@ class DataScreen(MDScreen):
         self.mainLayout = MDNavigationLayout()
         self.screenManager = MDScreenManager()
         
+
+        # * Layout for the table including the top app bar
+        # ! The top app bar will soon be replaced with tabs......
         self.tableScreen = MDScreen()
         self.tableScreenLayout = MDBoxLayout(orientation = "vertical", padding = 20)
 
@@ -198,6 +171,9 @@ class DataScreen(MDScreen):
         self.navdrawer.set_state("open")
     
 class ProductScreen(MDScreen):
+    """
+    * The main screen of the window including the table layout
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
@@ -213,6 +189,9 @@ class ProductScreen(MDScreen):
         self.add_widget(self.resourceButton)
 
     def open_dialog(self, *args):
+        """
+        * Opens the add product form dialog
+        """
         if not self.addFormDialog:
             self.addFormDialog = MDDialog(
                 title ="Record Item",
@@ -224,6 +203,10 @@ class ProductScreen(MDScreen):
         self.addFormDialog.open()
     
     def addTableRow(self, *args):
+        """
+        * Add a table row in realtime
+        """
+
         self.addProductForm.getData(*args)
         self.dataScreen.table.row_data = getallData("products")
 
