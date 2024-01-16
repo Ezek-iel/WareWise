@@ -21,25 +21,8 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
 from kivy.lang.builder import Builder
 
+from components import NavContent, FormTextField
 kv = open("kv/resourcesScreen.kv").read()
-
-class NavContent(MDBoxLayout):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.orientation = "vertical"
-        self.pos_hint = {"center_y" : 1.0}
-
-        self.userOption = OneLineIconListItem(IconLeftWidget(icon = "account"),text = "Suppliers")
-        self.resourcesOption = OneLineIconListItem(IconLeftWidget(icon = "cart"),text = "Items")
-        self.productsOption = OneLineIconListItem(IconLeftWidget(icon = "devices"),text = "Products")
-        self.databaseOption = OneLineIconListItem(IconLeftWidget(icon = "backup-restore"),text = "Restore")
-        self.settingsOption = OneLineIconListItem(IconLeftWidget(icon = "cog-outline"),text = "Settings")
-        
-        self.add_widget(self.userOption)
-        self.add_widget(self.resourcesOption)
-        self.add_widget(self.productsOption)
-        self.add_widget(self.databaseOption)
-        self.add_widget(self.settingsOption)
 
 class RecordResourceButton(MDFloatingActionButtonSpeedDial):
     """
