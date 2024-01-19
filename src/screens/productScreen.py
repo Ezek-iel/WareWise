@@ -1,7 +1,7 @@
         #* All imports
 
-from storage.database_actions import getallData, addProduct, getSupplierNames
-from storage.settings import getProductTypes
+from screens.storage.database_actions import getallData, addProduct, getSupplierNames
+from screens.storage.settings import getProductTypes
 
 
 from kivymd.app import MDApp
@@ -20,9 +20,9 @@ from kivymd.uix.textfield import MDTextField
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
 from kivy.lang.builder import Builder
-from components import NavContent, FormTextField
+from screens.components import NavContent, FormTextField
 
-kv = open("kv/productScreen.kv").read()
+kv = open("screens/kv/productScreen.kv").read()
 
 class RecordProductButton(MDFloatingActionButtonSpeedDial):
     """
@@ -145,14 +145,9 @@ class DataScreen(MDScreen):
 
         self.tableLayout.add_widget(self.table)
         
-        self.topbar = MDTopAppBar(title = "WareWise [Products Table]",left_action_items = [["menu", lambda x: self.open_nav(),"More Options"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Products Table]")
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
-        
-        self.navdrawer = MDNavigationDrawer(radius = (0,8,8,0))
-        self.navcontent= NavContent()
-
-        self.navdrawer.add_widget(self.navcontent)
 
         self.tableScreenLayout.add_widget(self.tableLayout)
         self.tableScreen.add_widget(self.tableScreenLayout)
@@ -160,15 +155,9 @@ class DataScreen(MDScreen):
         
         self.screenManager.add_widget(self.tableScreen)
         self.mainLayout.add_widget(self.screenManager)
-        self.mainLayout.add_widget(self.navdrawer)
         
         self.add_widget(self.mainLayout)
 
-    def open_nav(self):
-        """
-        * Open the left navigation bar with the top bar left button
-        """
-        self.navdrawer.set_state("open")
     
 class ProductScreen(MDScreen):
     """
@@ -209,15 +198,3 @@ class ProductScreen(MDScreen):
 
         self.addProductForm.getData(*args)
         self.dataScreen.table.row_data = getallData("products")
-
-class WareWise(MDApp):
-    
-    def build(self):
-        self.theme_cls.theme_style = "Dark"
-        self.theme_cls.material_style = "M3"
-        
-
-        return ProductScreen()
-
-if __name__ == '__main__':
-    WareWise().run()

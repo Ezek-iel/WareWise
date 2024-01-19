@@ -1,5 +1,5 @@
-from storage.database_actions import getallData, addSupplier
-from storage.settings import getResourceTypes
+from screens.storage.database_actions import getallData, addSupplier
+from screens.storage.settings import getResourceTypes
 
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
@@ -19,7 +19,7 @@ from kivymd.uix.textfield import MDTextField
 
 from kivy.lang import Builder
 
-kv = open("kv\\supplierScreen.kv").read()
+kv = open("screens\\kv\\supplierScreen.kv").read()
 
 class RecordSupplierButton(MDFloatingActionButtonSpeedDial):
     def __init__(self, **kwargs):
@@ -78,7 +78,7 @@ class DataScreen(MDScreen):
         self.navDrawer = MDNavigationDrawer()
         self.navContent = NavigationContent()
 
-        self.topbar = MDTopAppBar(title = "WareWise [Supplier Table]",left_action_items = [["menu", lambda x: self.open_nav(),"More Options"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Supplier Table]")
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 
@@ -103,13 +103,8 @@ class DataScreen(MDScreen):
         self.screenManager.add_widget(self.innerScreen)
         self.mainLayout.add_widget(self.screenManager)
 
-        self.navDrawer.add_widget(self.navContent)
-        self.mainLayout.add_widget(self.navDrawer)
-
         self.add_widget(self.mainLayout)
 
-    def open_nav(self):
-        self.navDrawer.set_state("open")
 
 class AddItemForm(MDBoxLayout):
     """
@@ -209,13 +204,3 @@ class SupplierScreen(MDScreen):
     def addTableRow(self, *args):
         self.addSupplierForm.getData(*args)
         self.dataScreen.table.row_data = getallData("suppliers")
-
-class WareWise(MDApp):
-
-    def build(self):
-        self.theme_cls.theme_style = "Dark"    
-        self.theme_cls.material_style = "M3"
-        return SupplierScreen()
-
-if __name__ == "__main__":
-    WareWise().run()

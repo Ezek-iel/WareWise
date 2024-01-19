@@ -1,7 +1,7 @@
         #* All imports
 
-from storage.database_actions import getallData, addResource, getSupplierNames
-from storage.settings import getResourceTypes
+from screens.storage.database_actions import getallData, addResource, getSupplierNames
+from screens.storage.settings import getResourceTypes
 
 
 from kivymd.app import MDApp
@@ -21,8 +21,9 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
 from kivy.lang.builder import Builder
 
-from components import NavContent, FormTextField
-kv = open("kv/resourcesScreen.kv").read()
+from screens.components import NavContent 
+from screens.components import FormTextField as FormField
+kv = open("screens/kv/resourcesScreen.kv").read()
 
 class RecordResourceButton(MDFloatingActionButtonSpeedDial):
     """
@@ -34,23 +35,6 @@ class RecordResourceButton(MDFloatingActionButtonSpeedDial):
         self.type = "standard"
         self.root_button_anim = True
         self.pos_hint = {"center_x" : 0.9, "center_y" : 0.07}  
-
-class FormField(MDTextField):
-    """
-    * A text field with the ability to validate text upon user input
-    ! Targeted for numeric purposes
-    """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.set_text = self.check
-    
-    def check(self, instance, text):
-        if len(text) == 0 or text.isnumeric():
-            self.error = False
-            self.helper_text = ""
-        else:
-            self.error = True
-            self.helper_text = "Value must be numeric"
 
 class AddItemForm(MDBoxLayout):
     """
@@ -181,30 +165,18 @@ class DataScreen(MDScreen):
 
         self.dataTable.add_widget(self.table)
         
-        self.topbar = MDTopAppBar(title = "WareWise [Resources Table]",left_action_items = [["menu", lambda x: self.open_nav(),"More Options"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Resources Table]")
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
         
-        self.navdrawer = MDNavigationDrawer(radius = (0,8,8,0))
-        self.navcontent= NavContent()
-
-        self.navdrawer.add_widget(self.navcontent)
-
         self.tableScreenLayout.add_widget(self.dataTable)
         self.tableScreen.add_widget(self.tableScreenLayout)
         self.tableScreen.add_widget(self.topbar)
         
         self.screenManager.add_widget(self.tableScreen)
         self.mainLayout.add_widget(self.screenManager)
-        self.mainLayout.add_widget(self.navdrawer)
         
         self.add_widget(self.mainLayout)
-
-    def open_nav(self):
-        """
-        * Open the left navigation bar with the top bar left button
-        """
-        self.navdrawer.set_state("open")
 
 class ResourceScreen(MDScreen):
     def __init__(self, *args, **kwargs):
@@ -236,13 +208,3 @@ class ResourceScreen(MDScreen):
         self.addResourceForm.getData(*args)
         self.dataScreen.table.row_data = getallData("resources")
     
-
-class WareWise(MDApp):
-    
-    def build(self):
-        self.theme_cls.theme_style = "Dark"
-        self.theme_cls.material_style = "M3"
-        return ResourceScreen()
-
-if __name__ == '__main__':
-    WareWise().run()

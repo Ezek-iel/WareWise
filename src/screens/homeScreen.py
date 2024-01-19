@@ -13,27 +13,7 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.list import OneLineIconListItem,IconLeftWidget
 
-class NavigationContent(MDBoxLayout):
-    """ 
-    * Content of the Left Navigation Bar 
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.orientation = "vertical"
-        self.pos_hint = {"center_y" : 1.0}
-
-        self.userOption = OneLineIconListItem(IconLeftWidget(icon = "account"),text = "Suppliers")
-        self.resourcesOption = OneLineIconListItem(IconLeftWidget(icon = "cart"),text = "Items")
-        self.productsOption = OneLineIconListItem(IconLeftWidget(icon = "devices"),text = "Products")
-        self.databaseOption = OneLineIconListItem(IconLeftWidget(icon = "backup-restore"),text = "Restore")
-        self.settingsOption = OneLineIconListItem(IconLeftWidget(icon = "cog-outline"),text = "Settings")
-        
-        self.add_widget(self.userOption)
-        self.add_widget(self.resourcesOption)
-        self.add_widget(self.productsOption)
-        self.add_widget(self.databaseOption)
-        self.add_widget(self.settingsOption)
+from screens.components import NavContent
 
 class HomeLayout(MDGridLayout):
     """
@@ -77,7 +57,7 @@ class HomeScreen(MDScreen):
         self.cardScreen = MDScreen()
         
         # * Top app bar of the home screen
-        self.topbar = MDTopAppBar(title = "WareWise",  left_action_items=[['menu', lambda x: self.open_nav(),"More Options"]])
+        self.topbar = MDTopAppBar(title = "WareWise Home Screen")
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
         
@@ -103,31 +83,13 @@ class HomeScreen(MDScreen):
         self.cardScreen.add_widget(self.topbar)
 
 
-        # * The left navigation bar of the home screen
-        self.navDrawer = MDNavigationDrawer(radius = (0,8,8,0))
-        self.navcontent = NavigationContent()
-        self.navDrawer.add_widget(self.navcontent)
+       
+        
 
         self.mainScreenManager.add_widget(self.cardScreen)
 
         self.homeLayout.add_widget(self.mainScreenManager)
-        self.homeLayout.add_widget(self.navDrawer)
+        
 
         self.add_widget(self.homeLayout)
 
-    
-    def open_nav(self):
-        """
-        * Open the navbar on the click of the top app bar left button
-        """
-        self.navDrawer.set_state("open")
-
-class WareWise(MDApp):
-    def build(self):
-        self.theme_cls.theme_style = "Dark"
-        self.theme_cls.material_style = "M3"
-        return HomeScreen()
-
-
-if __name__ == "__main__":
-    WareWise().run()
