@@ -1,28 +1,24 @@
         #* All imports
 
-from storage.database_actions import getallData, addProduct, getSupplierNames
+from storage.database_actions import getallData, addProduct
 from storage.settings import getProductTypes
 
 
-from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
 from kivymd.uix.anchorlayout import MDAnchorLayout
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
-from kivymd.uix.navigationdrawer import MDNavigationDrawer, MDNavigationLayout
+from kivymd.uix.navigationdrawer import MDNavigationLayout
 from kivymd.uix.toolbar import MDTopAppBar
-from kivymd.uix.button import MDFloatingActionButtonSpeedDial, MDFillRoundFlatIconButton, MDRaisedButton, MDIconButton
+from kivymd.uix.button import MDFloatingActionButtonSpeedDial, MDFillRoundFlatIconButton, MDRaisedButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.textfield import MDTextField
 from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
-from kivy.lang.builder import Builder
-from components import NavContent, FormTextField
+from screens.components import FormTextField
 
-kv = open("kv/productScreen.kv").read()
+kv = open("screens/kv/productScreen.kv").read()
 
 class RecordProductButton(MDFloatingActionButtonSpeedDial):
     """
@@ -140,19 +136,15 @@ class DataScreen(MDScreen):
             ("Quantity", dp(40))
             ],
             row_data = getallData("products"),
-            elevation = 2,
+            elevation = 0,
+            rows_num = 0
         )
 
         self.tableLayout.add_widget(self.table)
         
-        self.topbar = MDTopAppBar(title = "WareWise [Products Table]",left_action_items = [["menu", lambda x: self.open_nav(),"More Options"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Products Table]", left_action_items = [["package-variant-closed-plus"]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
-        
-        self.navdrawer = MDNavigationDrawer(radius = (0,8,8,0))
-        self.navcontent= NavContent()
-
-        self.navdrawer.add_widget(self.navcontent)
 
         self.tableScreenLayout.add_widget(self.tableLayout)
         self.tableScreen.add_widget(self.tableScreenLayout)
@@ -160,15 +152,9 @@ class DataScreen(MDScreen):
         
         self.screenManager.add_widget(self.tableScreen)
         self.mainLayout.add_widget(self.screenManager)
-        self.mainLayout.add_widget(self.navdrawer)
         
         self.add_widget(self.mainLayout)
 
-    def open_nav(self):
-        """
-        * Open the left navigation bar with the top bar left button
-        """
-        self.navdrawer.set_state("open")
     
 class ProductScreen(MDScreen):
     """
@@ -209,15 +195,3 @@ class ProductScreen(MDScreen):
 
         self.addProductForm.getData(*args)
         self.dataScreen.table.row_data = getallData("products")
-
-class WareWise(MDApp):
-    
-    def build(self):
-        self.theme_cls.theme_style = "Dark"
-        self.theme_cls.material_style = "M3"
-        
-
-        return ProductScreen()
-
-if __name__ == '__main__':
-    WareWise().run()
