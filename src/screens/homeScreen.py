@@ -1,19 +1,15 @@
     # * All imports
 
-from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.card import MDCard
 from kivymd.uix.toolbar import MDTopAppBar
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.relativelayout import MDRelativeLayout
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.navigationdrawer import MDNavigationLayout, MDNavigationDrawer
+from kivymd.uix.navigationdrawer import MDNavigationLayout
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
-from kivymd.uix.list import OneLineIconListItem,IconLeftWidget
 
-from screens.components import NavContent
 
 class HomeLayout(MDGridLayout):
     """
@@ -33,7 +29,7 @@ class HomeCard(MDCard):
         super().__init__(*args, **kwargs)
         self.icon = icon
         self.text = text
-        self.style = "elevated"
+        self.style = "filled"
         #self.md_bg_color = "#eff0f2"
         self.innerLayout = MDRelativeLayout()
         self.innerIcon = MDIconButton(icon = self.icon, pos_hint={"center_x": 0.5, "center_y": 0.5}, icon_size = "50dp", size_hint = (1,1))
@@ -57,7 +53,8 @@ class HomeScreen(MDScreen):
         self.cardScreen = MDScreen()
         
         # * Top app bar of the home screen
-        self.topbar = MDTopAppBar(title = "WareWise Home Screen")
+        self.topbar = MDTopAppBar(title = "WareWise Home Screen", left_action_items =  [["home-analytics"]])
+        
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
         
@@ -93,3 +90,5 @@ class HomeScreen(MDScreen):
 
         self.add_widget(self.homeLayout)
 
+        def noAction(self):
+            pass

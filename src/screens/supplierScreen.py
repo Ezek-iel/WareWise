@@ -1,23 +1,20 @@
-from screens.storage.database_actions import getallData, addSupplier
-from screens.storage.settings import getResourceTypes
+from storage.database_actions import getallData, addSupplier
+from storage.settings import getResourceTypes
 
-from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.datatables import MDDataTable
 from kivymd.uix.anchorlayout import MDAnchorLayout
 from kivymd.uix.toolbar import MDTopAppBar
-from kivymd.uix.navigationdrawer import MDNavigationDrawer, MDNavigationLayout
-from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
+from kivymd.uix.navigationdrawer import MDNavigationLayout
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDFloatingActionButtonSpeedDial, MDRoundFlatIconButton, MDFillRoundFlatIconButton, MDRaisedButton
+from kivymd.uix.button import MDFloatingActionButtonSpeedDial, MDFillRoundFlatIconButton, MDRaisedButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.metrics import dp
 from kivymd.uix.textfield import MDTextField
 
-from kivy.lang import Builder
 
 kv = open("screens\\kv\\supplierScreen.kv").read()
 
@@ -27,25 +24,6 @@ class RecordSupplierButton(MDFloatingActionButtonSpeedDial):
         self.type = "standard"
         self.root_button_anim = True
         self.pos_hint = {"center_x" : 0.9, "center_y" : 0.07}
-
-class NavigationContent(MDBoxLayout):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.orientation = "vertical"
-        self.pos_hint = {"center_y" : 1.0}
-    
-        self.userOption = OneLineIconListItem(IconLeftWidget(icon = "account"),text = "Suppliers")
-        self.resourcesOption = OneLineIconListItem(IconLeftWidget(icon = "cart"),text = "Items")
-        self.productsOption = OneLineIconListItem(IconLeftWidget(icon = "devices"),text = "Products")
-        self.databaseOption = OneLineIconListItem(IconLeftWidget(icon = "backup-restore"),text = "Restore")
-        self.settingsOption = OneLineIconListItem(IconLeftWidget(icon = "cog-outline"),text = "Settings")
-        
-        self.add_widget(self.userOption)
-        self.add_widget(self.resourcesOption)
-        self.add_widget(self.productsOption)
-        self.add_widget(self.databaseOption)
-        self.add_widget(self.settingsOption)
 
 class FormField(MDTextField):
     """
@@ -75,10 +53,7 @@ class DataScreen(MDScreen):
         self.screenManager = MDScreenManager()
         self.innerScreen = MDScreen()
 
-        self.navDrawer = MDNavigationDrawer()
-        self.navContent = NavigationContent()
-
-        self.topbar = MDTopAppBar(title = "WareWise [Supplier Table]")
+        self.topbar = MDTopAppBar(title = "WareWise [Supplier Table]", left_action_items = [["card-account-details"]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 
@@ -92,7 +67,8 @@ class DataScreen(MDScreen):
                 ("Resource Type",dp(40)),
             ],
             row_data = [tuple(row) for row in getallData("suppliers")],
-            elevation = 2
+            elevation = 0,
+            rows_num = 10
         )
 
         self.data_table.add_widget(self.table)

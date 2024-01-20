@@ -1,4 +1,3 @@
-from kivymd.app import MDApp
 from kivy.metrics import dp
 from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
@@ -6,24 +5,20 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.textfield import MDTextField
-from kivymd.uix.selectioncontrol import MDSwitch
-from kivymd.uix.navigationdrawer import MDNavigationDrawer, MDNavigationLayout
+from kivymd.uix.navigationdrawer import MDNavigationLayout
 from kivymd.uix.screenmanager import MDScreenManager
-from kivymd.uix.button import MDFillRoundFlatIconButton, MDRaisedButton, MDRoundFlatButton
-from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
+from kivymd.uix.button import MDFillRoundFlatIconButton, MDRaisedButton
 from kivymd.uix.toolbar import MDTopAppBar
 
-from screens.storage.settings import getProductTypes, getResourceTypes, addProductType, addResourceType
-from screens.components import NavContent
+from storage.settings import getProductTypes, getResourceTypes, addProductType, addResourceType
 
 
 class OptionCard(MDCard):
     def __init__(self, text = None ,*args, **kwargs):
         super().__init__(*args, **kwargs)
         self.text = text
-        self.style = "elevated"
+        self.style = "filled"
         self.line_color=(0.2, 0.2, 0.2, 0.8)
-        self.shadow_offset=(0, -1)
 
         self.layout = MDBoxLayout(orientation = "horizontal", padding = dp(30), spacing = dp(20))
 
@@ -106,7 +101,7 @@ class SettingScreen(MDScreen):
         self.navLayoutScreen = MDScreen()
         self.navSettingsLayout = SettingsLayout()
         
-        self.topbar = MDTopAppBar(title = "Warewise [Settings]", icon = "account")
+        self.topbar = MDTopAppBar(title = "Warewise [Settings]", left_action_items = [["cog-sync"]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 

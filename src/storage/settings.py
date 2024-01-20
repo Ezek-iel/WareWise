@@ -1,7 +1,7 @@
 import json
 
 try:
-    sampleFile = open("screens\\storage\\settings.json").close()
+    sampleFile = open("storage\\settings.json").close()
 except FileNotFoundError as error:
     sampleFile = open("settings.json").close()
 
@@ -9,7 +9,7 @@ except FileNotFoundError as error:
 def getResourceTypes() -> list:
     
     try:
-        jsonfile = open("screens\\storage\\settings.json")
+        jsonfile = open("storage\\settings.json")
     except FileNotFoundError as error:
         jsonfile = open("settings.json")
     
@@ -21,7 +21,7 @@ def getResourceTypes() -> list:
 def getProductTypes() -> list:
     
     try:
-     jsonfile = open("screens\\storage\\settings.json")
+     jsonfile = open("storage\\settings.json")
     except FileNotFoundError as error:
         jsonfile = open("settings.json")
     
@@ -37,7 +37,7 @@ def addProductType(productType):
         initData.append(productType)
     
     try:
-        jsonfile = open("screens\\storage\\settings.json", "r")
+        jsonfile = open("storage\\settings.json", "r")
     except FileNotFoundError as error:
         jsonfile = open("settings.json", "r")
     
@@ -47,7 +47,7 @@ def addProductType(productType):
     jsondata["Product Types"] = initData
 
     try:
-        jsonfile = open("screens\\storage\\settings.json", "w")
+        jsonfile = open("storage\\settings.json", "w")
     except FileNotFoundError as error:
         jsonfile = open("settings.json")
     
@@ -61,7 +61,7 @@ def addResourceType(resourceType):
         initData.append(resourceType)
     
     try:
-        jsonfile = open("screens\\storage\\settings.json", "r")
+        jsonfile = open("storage\\settings.json", "r")
     except FileNotFoundError as error:
         jsonfile = open("settings.json", "r")
     
@@ -71,7 +71,7 @@ def addResourceType(resourceType):
     jsondata["Resource Types"] = initData
 
     try:
-        jsonfile = open("screens\\storage\\settings.json", "w")
+        jsonfile = open("storage\\settings.json", "w")
     except FileNotFoundError as error:
         jsonfile = open("settings.json","w")
     

@@ -1,26 +1,22 @@
         #* All imports
 
-from screens.storage.database_actions import getallData, addProduct, getSupplierNames
-from screens.storage.settings import getProductTypes
+from storage.database_actions import getallData, addProduct
+from storage.settings import getProductTypes
 
 
-from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
 from kivymd.uix.anchorlayout import MDAnchorLayout
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
-from kivymd.uix.navigationdrawer import MDNavigationDrawer, MDNavigationLayout
+from kivymd.uix.navigationdrawer import MDNavigationLayout
 from kivymd.uix.toolbar import MDTopAppBar
-from kivymd.uix.button import MDFloatingActionButtonSpeedDial, MDFillRoundFlatIconButton, MDRaisedButton, MDIconButton
+from kivymd.uix.button import MDFloatingActionButtonSpeedDial, MDFillRoundFlatIconButton, MDRaisedButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.textfield import MDTextField
 from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.list import OneLineIconListItem, IconLeftWidget
-from kivy.lang.builder import Builder
-from screens.components import NavContent, FormTextField
+from screens.components import FormTextField
 
 kv = open("screens/kv/productScreen.kv").read()
 
@@ -140,12 +136,13 @@ class DataScreen(MDScreen):
             ("Quantity", dp(40))
             ],
             row_data = getallData("products"),
-            elevation = 2,
+            elevation = 0,
+            rows_num = 0
         )
 
         self.tableLayout.add_widget(self.table)
         
-        self.topbar = MDTopAppBar(title = "WareWise [Products Table]")
+        self.topbar = MDTopAppBar(title = "WareWise [Products Table]", left_action_items = [["package-variant-closed-plus"]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 

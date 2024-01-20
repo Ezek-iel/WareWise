@@ -5,7 +5,7 @@ def get_date():
     return time.strftime("%d %b %Y")
 
 try:
-    sampleConnection = sqlite3.connect("screens\\storage\\database.db")
+    sampleConnection = sqlite3.connect("storage\\database.db")
 
 except sqlite3.OperationalError as error:
     sampleConnection = sqlite3.connect("database.db")
@@ -18,7 +18,7 @@ sampleConnection.close()
 def getallData(tablename):
     
     try:
-        connection = sqlite3.connect("screens\\storage\\database.db")
+        connection = sqlite3.connect("storage\\database.db")
     
     except sqlite3.OperationalError as error:
         connection = sqlite3.connect("database.db")
@@ -34,7 +34,7 @@ def getallData(tablename):
 def addResource(supplier : int, product : int, pricePerUnit,quantity):
     
     try:
-        connection = sqlite3.connect("screens\\storage\\database.db")
+        connection = sqlite3.connect("storage\\database.db")
     
     except sqlite3.OperationalError as error:
         connection = sqlite3.connect("database.db")
@@ -50,7 +50,7 @@ def addResource(supplier : int, product : int, pricePerUnit,quantity):
 def addSupplier(name : str, resource : int, address : str = " "):
     
     try:
-        connection = sqlite3.connect("screens\\storage\\database.db")
+        connection = sqlite3.connect("storage\\database.db")
     
     except sqlite3.OperationalError as error:
         connection = sqlite3.connect("database.db")
@@ -58,7 +58,7 @@ def addSupplier(name : str, resource : int, address : str = " "):
     cursor = connection.cursor()
 
     
-    tableLength = len(getallData("screens\\suppliers"))
+    tableLength = len(getallData("suppliers"))
     cursor.executemany("INSERT INTO suppliers values(?, ?, ?)", [(name, address, resource)])
     connection.commit()
     connection.close()
@@ -66,7 +66,7 @@ def addSupplier(name : str, resource : int, address : str = " "):
 def addProduct(productType : str, pricePerUnit : int, quantity : int):
     
     try:
-        connection = sqlite3.connect("screens\\storage\\database.db")
+        connection = sqlite3.connect("storage\\database.db")
     
     except sqlite3.OperationalError as error:
         connection = sqlite3.connect("database.db")
