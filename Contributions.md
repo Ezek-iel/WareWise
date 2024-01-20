@@ -7,26 +7,40 @@
 2. Clone the forked repository to your local machine.
 
    ```bash
-   git clone https://github.com/your-username/kivymd.git
+   git clone https://github.com/Ezek-iel/WareWise.git
    ```
 
-3. Activate the virtual environment.
+3. Create the virtual environment.
 
    - On Windows:
+
+   ```shell
+   py -m venv .venv
+   ```
 
    ```shell
    .venv\Scripts\activate
    ```
 
    - On macOS/Linux:
+   
+   ```shell
+   python3 -m venv .venv
+   ```
 
    ```bash
    source venv/bin/activate
    ```
 
+4. Install all dependacies
+
+   ```shell
+   pip intall -r requirements.txt
+   ```
+
 ### Coding Standards
 
-- We used declarative python style instead of the `.kv` style
+- We used imperative python style instead of the `.kv` style
 - Use camelCase for all variable names.
 
    ```python
@@ -58,5 +72,5 @@
 
 ### Thank You
 
-Thanks for contributing to KivyMD! Your efforts make the project better for everyone. 🚀
+Thanks for contributing to WareWise! Your efforts make the project better for everyone. 🚀
 

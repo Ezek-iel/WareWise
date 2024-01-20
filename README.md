@@ -18,9 +18,11 @@ Efficiency, aesthetics, and functionality converge in WareWise. It's not just ab
 
 We welcome contributions to make WareWise even better! If you'd like to contribute, follow these steps:
 
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes and submit a pull request.
-4. Ensure your code adheres to our coding standards.
+1. 🍴 __Fork__ the repository.
+2. 🌿 __Create__ a new branch for your feature or bug fix.
+3. 👩‍💻 __Make__ your changes and submit a pull request.
+4. 🌐 __Ensure__ your code adheres to our coding standards.
 
 Thank you for contributing to __WareWise!__ Together, we can build the future of Inventory management.
+
+## __✌ View [License](LICENSE)__:
