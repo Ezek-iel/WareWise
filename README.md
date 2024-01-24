@@ -1,3 +1,5 @@
+# 🔔 Notice, This Branch is for Major Improvements #1
+
 # WareWise: Inventory Management with Kivy MD
 
 Welcome to WareWise, where efficiency meets elegance in __[Inventory management!](Info.md)__ Built on the robust Kivy MD framework, WareWise brings a seamless and visually appealing solution to streamline your inventory processes.
