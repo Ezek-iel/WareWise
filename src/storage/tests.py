@@ -8,9 +8,6 @@ Session = sessionmaker(Engine)
 testsession = Session()
 
 
-
-#  TODO Variable naming issues, plural where singular is meant to be
-
 class TestModels(unittest.TestCase):
 
     def setUp(self):
