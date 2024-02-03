@@ -1,9 +1,5 @@
         #* All imports
 
-from  storage.database_actions import getallData, addResource, getSupplierNames
-from storage.settings import getResourceTypes
-
-
 from kivymd.uix.label import MDLabel
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
@@ -17,8 +13,10 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.menu import MDDropdownMenu
 
-from screens.components import FormTextField as FormField
+from screens.components import FormTextField
 kv = open("screens/kv/resourcesScreen.kv").read()
+
+from storage.models import dbSession, Resource, ResourceType, Category
 
 class RecordResourceButton(MDFloatingActionButtonSpeedDial):
     """
@@ -48,26 +46,36 @@ class AddItemForm(MDBoxLayout):
         self.resourceData = None
         self.quantityData = None
         self.supplierData = None
+        self.categoryData = None
+        self.descriptionData = None
         self.priceData = None
         
+
+
         # * The resource type field in the form
         self.resourceFieldLayout = MDBoxLayout(spacing = "7dp")
         self.resourceLabel = MDLabel(text = "Choose Resource Type", pos_hint = {"center_y" : 0.2})
         self.resourceField= MDFillRoundFlatIconButton(icon = "devices", text = "Resource Types")
         self.resourceField.bind(on_press = self.resourceOptions)
 
+        #* The name field in the form
+        self.nameField = FormTextField(hint_text = "Resource Name", helper_text_mode = "persistent")
+
         
         # * The quantity field in the form
         #self.quantityField = MDTextField(helper_text = "Item quantity", helper_text_mode = "persistent")
-        self.quantityField = FormField(hint_text = "Resource quantity", helper_text_mode = "persistent")
+        self.quantityField = FormTextField(hint_text = "Resource quantity", helper_text_mode = "persistent")
 
-        # * The supplier field in the form
-        self.supplierFieldLayout = MDBoxLayout(spacing = "7dp")
-        self.supplierLabel = MDLabel(text = "Choose Supplier", pos_hint = {"center_y" : 0.2})
+        #* The description field in the form
+        self.descriptionField = FormTextField(hint_text = "Resource Description", helper_text_mode = "persistent")
+
+        # * The category field in the form
+        self.categoryFieldLayout = MDBoxLayout(spacing = "7dp")
+        self.categoryLabel = MDLabel(text = "Choose Category", pos_hint = {"center_y" : 0.2})
         self.supplierField = MDFillRoundFlatIconButton(icon = "account",text = "Supplier")
-        self.supplierField.bind(on_press = self.supplierOptions)
+        self.supplierField.bind(on_press = self.categoryOptions)
 
-        self.priceField = FormField(hint_text = "Resource price", helper_text_mode = "persistent")
+        self.priceField = FormTextField(hint_text = "Resource price", helper_text_mode = "persistent")
         
 
         self.resourceFieldLayout.add_widget(self.resourceField)
@@ -77,43 +85,39 @@ class AddItemForm(MDBoxLayout):
         
         self.add_widget(self.quantityField)
         self.add_widget(self.priceField)
-
-        self.supplierFieldLayout.add_widget(self.supplierField)
-        self.supplierFieldLayout.add_widget(self.supplierLabel)
-        self.add_widget(self.supplierFieldLayout)
+        self.add_widget(self.nameField)
 
         self.resourceMenu = None
-        self.supplierMenu = None
+        self.categoryMenu = None
     
-    def setSupplier(self,value):
-        self.supplierLabel.text = value
-        self.supplierData = value
-            
-    def setResource(self,value):
-        self.resourceLabel.text = value
-        self.resourceData = value
+    def setResourceType(self,value):
+        resourceTypeToRetrieve = dbSession.query(ResourceType).filter_by(name = value).first()
+        self.resourceTypeData = resourceTypeToRetrieve
+        self.resourceLabel.text = resourceTypeToRetrieve.name
+    
+    def setCategory(self,value):
+        categoryToRetrieve = dbSession.query(Category).filter_by(name = value).first()
+
+        self.categoryData = categoryToRetrieve
+        self.categoryLabel.text = categoryToRetrieve.name
 
     
+    def categoryOptions(self, instance):
+        menu_items = [{"text" : f'{i.name}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i.name}": self.setCategory(x),
+        } for i in dbSession.query(Category).all()]
+        self.categoryMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5) ,width_mult = 4)
+        self.categoryMenu.open()
+
+
     def resourceOptions(self, instance):
         """
         * A menu with a set of resource types for the resource field
-        TODO connect the options to an actual database
         """
-        menu_items = [{"text" : f'{i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i}": self.setResource(x),
-        } for i in getResourceTypes()]
-        self.resourceMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
-                                          ,width_mult = 4)
+        menu_items = [{"text" : f'{i.name}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i.name}": self.setResourceType(x),
+        } for i in dbSession.query(ResourceType).all()]
+        self.resourceMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5) ,width_mult = 4)
         self.resourceMenu.open()
     
-    def supplierOptions(self, instance):
-        """
-        * A menu with a set of supplier information for the supplier field
-        TODO connect the options to an actual database
-        """
-        menu_items = [{"text" : f'Supplier {i}', "viewclass" : "OneLineListItem", "on_release" : lambda x = i : self.setSupplier(x)} for i in getSupplierNames()]
-        self.supplierMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
-                                          ,width_mult = 4)
-        self.supplierMenu.open()
 
     def getData(self, instance):
         """
@@ -122,8 +126,16 @@ class AddItemForm(MDBoxLayout):
         """
         self.quantityData = self.quantityField.text
         self.priceData = self.priceField.text
+        self.categoryData
+        self.resourceTypeData
+        self.nameData = self.nameField.text
+        self.descriptionData = self.descriptionField.text
 
-        addResource(self.supplierData, self.resourceData, self.priceData, self.quantityData)
+        resourceToAdd = Resource(name = self.nameData, unitPrice = self.priceData, description = self.descriptionData, quantity = self.quantityData, category = self.categoryData, resourceType = self.resourceTypeData)
+
+        dbSession.add(resourceToAdd)
+        dbSession.commit()
+
         return (self.supplierData, self.resourceData, self.priceData, self.quantityData)
 
 class DataScreen(MDScreen):
@@ -148,15 +160,15 @@ class DataScreen(MDScreen):
             size_hint=(0.8, 0.9),
             use_pagination = True,
             column_data = [
-            ("Supplier", dp(40)),
-            ("Resource Type", dp(40)),
-            ("Date",dp(40)),
-            ("Unit Price", dp(40)),
-            ("Quantity", dp(40))
+            ("Resource Name", dp(40)),
+            ("Resource Unit Price", dp(40)),
+            ("Description",dp(40)),
+            ("Quantity", dp(40)),
+            ("Category", dp(40)),
+            ("Resource Type", dp(40))
             ],
-            row_data = getallData("resources"),
+            row_data = [(resource.name, resource.unitPrice, resource.description, resource.quantity, resource.category, resource.resourceType) for resource in dbSession.query(Resource).all()],
             elevation = 0,
-            rows_num = 10
         )
 
         self.dataTable.add_widget(self.table)
@@ -202,5 +214,4 @@ class ResourceScreen(MDScreen):
     
     def addTableRow(self, *args):
         self.addResourceForm.getData(*args)
-        self.dataScreen.table.row_data = getallData("resources")
-    
+        self.dataScreen.table.row_data =  [(resource.name, resource.unitPrice, resource.description, resource.quantity, resource.category, resource.resourceType) for resource in dbSession.query(Resource).all()]

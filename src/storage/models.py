@@ -22,18 +22,22 @@ class Category(Base):
     resources = relationship("Resource", back_populates="category")
 
     def __repr__(self):
-        return f"Category <{self.name}>"
+        return f"Category {self.name}"
 
 class Product(Base):
     __tablename__ = "products"
     productId = Column(Integer, primary_key=True)
     name = Column(String, nullable = False)
+    unitPrice = Column(Integer, nullable=False)
     description = Column(String, nullable = True)
     quantity = Column(Integer, default = int(1))
     categoryId = Column(Integer, ForeignKey("categories.categoryId"))
+    productTypeId = Column(Integer, ForeignKey("product_types.typeId"))
 
     category = relationship('Category', back_populates='products')
     orders = relationship("Order", back_populates="product")
+    productType = relationship("ProductType", back_populates="products")
+
 
     def __repr__(self):
         return f"Product <{self.name}>"
@@ -42,12 +46,18 @@ class Resource(Base):
     __tablename__ = "resources"
     resourceId = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
+    unitPrice = Column(Integer, nullable = False)
     description = Column(String, nullable=True)
     quantity = Column(Integer, default=1, nullable=False)
     categoryId = Column(Integer, ForeignKey("categories.categoryId"))
+    resourceTypeId = Column(Integer, ForeignKey("resource_types.typeId"))
 
     category = relationship("Category",back_populates='resources')
     transactions = relationship("Transaction", back_populates="resource")
+    resourceType = relationship("ResourceType", back_populates="resources")
+
+    def __repr__(self):
+        return f'Resource <{self.name}>'
 
 class Customer(Base):
     __tablename__ = "customers"
@@ -117,4 +127,28 @@ class Transaction(Base):
     supplier = relationship("Supplier", back_populates="transactions")
 
     resource = relationship("Resource", back_populates="transactions")
-Base.metadata.create_all(Engine)
+
+class ProductType(Base):
+    __tablename__ = "product_types"
+
+    typeId = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    basePrice = Column(Integer, nullable=False)
+
+    products = relationship("Product", back_populates='productType')
+
+    def __repr__(self):
+        return f'Product Type {self.name}'
+
+class ResourceType(Base):
+    __tablename__ = "resource_types"
+
+    typeId = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    basePrice = Column(Integer, nullable=False)
+
+    resources = relationship("Resource", back_populates='resourceType')
+
+    def __repr__(self):
+        return f'Resource Type {self.name}'
+    

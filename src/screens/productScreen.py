@@ -1,8 +1,5 @@
         #* All imports
 
-from storage.database_actions import getallData, addProduct
-from storage.settings import getProductTypes
-
 
 from kivymd.uix.label import MDLabel
 from kivymd.uix.datatables import MDDataTable
@@ -17,6 +14,10 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.menu import MDDropdownMenu
 from screens.components import FormTextField
+
+
+from storage.models import Product, dbSession, ProductType, Category
+
 
 kv = open("screens/kv/productScreen.kv").read()
 
@@ -43,13 +44,15 @@ class AddItemForm(MDBoxLayout):
         self.spacing= "16dp"
         self.padding = "8dp"
         self.size_hint_y= None
-        self.height= "235dp"
+        self.height= "400dp"
         self.orientation = "vertical"
 
         # * Data to be retrieved from the form
         self.productData = None
         self.quantityData = None
         self.priceData = None
+        self.categoryData = None
+        self.productTypeData = None
         
         # * The product type field in the form
         self.productFieldLayout = MDBoxLayout(spacing = "7dp")
@@ -57,42 +60,80 @@ class AddItemForm(MDBoxLayout):
         self.productField= MDFillRoundFlatIconButton(icon = "devices", text = "Product Type")
         self.productField.bind(on_press = self.productOptions)
 
+         # * The category field in the form
+        self.categoryFieldLayout = MDBoxLayout(spacing = "7dp")
+        self.categoryLabel = MDLabel(text = "Choose Category", pos_hint = {"center_y" : 0.2})
+        self.categoryField= MDFillRoundFlatIconButton(icon = "devices", text = "Category")
+        self.categoryField.bind(on_press = self.categoryOptions)
+
         
         # * The quantity field in the form
-        self.quantityField = FormTextField(hint_text = "Product quantity", helper_text_mode = "persistent")
+        self.quantityField = FormTextField(hint_text = "Product Quantity", helper_text_mode = "persistent")
 
         # * The supplier field in the form
-        self.priceField = FormTextField(hint_text = "Product price", helper_text_mode = "persistent")
+        self.priceField = FormTextField(hint_text = "Product Price", helper_text_mode = "persistent")
         
+        #* The Name field in the form
+        self.nameField = FormTextField(hint_text = "Product Name", helper_text_mode = 'persistent')
+
+        #* The description field in the form
+        self.descriptionField = FormTextField(hint_text = "Product Description", helper_text_mode = 'persistent')
 
         self.productFieldLayout.add_widget(self.productField)
         self.productFieldLayout.add_widget(self.productLabel)
-        self.add_widget(self.productFieldLayout)    
+        self.add_widget(self.productFieldLayout)  
         
+        self.categoryFieldLayout.add_widget(self.categoryLabel)
+        self.categoryFieldLayout.add_widget(self.categoryField)
+
+        self.add_widget(self.categoryFieldLayout)
         
         self.add_widget(self.quantityField)
         self.add_widget(self.priceField)
+        self.add_widget(self.nameField)
+        self.add_widget(self.descriptionField)
+    
 
         self.productMenu = None
             
-    def setProduct(self,value):
+    def setProductType(self,value):
         """
         * Set the text beside the product button and also the product data
         """
-        self.productLabel.text = value
-        self.productData = value
+        productTypeToRetrieve = dbSession.query(ProductType).filter_by(name = value).first()
+
+        self.productLabel.text = productTypeToRetrieve.name
+        self.productTypeData = productTypeToRetrieve
+
+    def setCategory(self, value):
+        """
+        * Set the text beside the product button and also the product data
+        """
+        categoryToRetrieve = dbSession.query(Category).filter_by(name = value).first()
+
+        self.categoryLabel.text = categoryToRetrieve.name
+        self.categoryData = categoryToRetrieve
 
     
     def productOptions(self, instance):
         """
-        * A menu with a set of product types for the product field
-        //TODO connect the options to an actual database
+        * A menu with a set of product types for the product fields
         """
-        menu_items = [{"text" : f'{i}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i}": self.setProduct(x),
-        } for i in getProductTypes()]
+        menu_items = [{"text" : f'{i.name}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i.name}": self.setProductType(x),
+        } for i in dbSession.query(ProductType).all()]
         self.productMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
-                                          ,width_mult = 4)
+         ,width_mult = 4)
         self.productMenu.open()
+    
+    def categoryOptions(self, instance):
+        """
+        * A menu with a set of categories for category field
+        """
+        menu_items = [{"text" : f'{i.name}', "viewclass" : "OneLineListItem", "on_release" : lambda x=f"{i.name}": self.setCategory(x),
+        } for i in dbSession.query(Category).all()]
+        self.categoryMenu = MDDropdownMenu(caller = instance, items = menu_items, max_height = dp(50 * 5)
+         ,width_mult = 4)
+        self.categoryMenu.open()
 
     def getData(self, instance):
         """
@@ -101,9 +142,17 @@ class AddItemForm(MDBoxLayout):
         """
         self.quantityData = self.quantityField.text
         self.priceData = self.priceField.text
+        self.nameData = self.nameField.text
+        self.categoryData
+        self.productTypeData
+        self.descriptionData = self.descriptionField.text
 
-        addProduct(self.productData, self.priceData, self.quantityData)
-        return (self.productData, self.priceData, self.quantityData)
+        productToAdd = Product(name = self.nameData, unitPrice = self.priceData, description = self.descriptionData,quantity = self.quantityData, productType = self.productTypeData, category = self.categoryData)
+
+        dbSession.add(productToAdd)
+        dbSession.commit()
+
+        return productToAdd
 
 class DataScreen(MDScreen):
     """ 
@@ -130,14 +179,14 @@ class DataScreen(MDScreen):
             size_hint=(0.8, 0.9),
             use_pagination = True,
             column_data = [
-            ("Product Type", dp(40)),
-            ("Date",dp(40)),
-            ("Unit Price", dp(40)),
-            ("Quantity", dp(40))
+            ("Product Name", dp(40)),
+            ("Product Unit Price",dp(40)),
+            ("Product Description", dp(40)),
+            ("Quantity", dp(40)),
+            ("Category",dp(40))
             ],
-            row_data = getallData("products"),
+            row_data = [(product.name, product.unitPrice, product.description, product.quantity, product.category.name) for product in dbSession.query(Product).all()],
             elevation = 0,
-            rows_num = 0
         )
 
         self.tableLayout.add_widget(self.table)
@@ -194,4 +243,4 @@ class ProductScreen(MDScreen):
         """
 
         self.addProductForm.getData(*args)
-        self.dataScreen.table.row_data = getallData("products")
+        self.dataScreen.table.row_data = [(product.name, product.unitPrice, product.description,product.quantity, product.category.name) for product in dbSession.query(Product).all()]

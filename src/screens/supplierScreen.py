@@ -1,6 +1,3 @@
-from storage.database_actions import getallData, addSupplier
-from storage.settings import getResourceTypes
-
 from kivymd.uix.label import MDLabel
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
@@ -14,6 +11,8 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.metrics import dp
 from kivymd.uix.textfield import MDTextField
+
+from storage.models import Supplier 
 
 
 kv = open("screens\\kv\\supplierScreen.kv").read()
@@ -66,7 +65,7 @@ class DataScreen(MDScreen):
                 ("Address",dp(40)),
                 ("Resource Type",dp(40)),
             ],
-            row_data = [tuple(row) for row in getallData("suppliers")],
+            row_data = [()],
             elevation = 0,
             rows_num = 10
         )
