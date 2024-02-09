@@ -5,7 +5,7 @@ from datetime import datetime
 
 Base = declarative_base()
 
-Engine =  create_engine("sqlite:///database.db", echo = True)
+Engine =  create_engine("sqlite:///database.db")
 
 Session = sessionmaker(Engine)
 dbSession = Session()

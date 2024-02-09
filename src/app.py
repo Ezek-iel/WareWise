@@ -4,7 +4,10 @@ from screens.productScreen import ProductScreen
 # from screens.homeScreen import HomeScreen
 from screens.resourceScreen import ResourceScreen
 # from screens.settingsScreen import SettingScreen
-# from screens.supplierScreen import SupplierScreen
+from screens.supplierScreen import SupplierScreen
+from screens.categoryScreen import CategoryScreen
+from screens.employeeScreen import EmployeeScreen
+from screens.transactionScreen import TransactionScreen
 
 from storage.models import Base, Engine
 from kivymd.uix.tab import MDTabs, MDTabsBase
@@ -25,27 +28,33 @@ class MainScreen(MDScreen):
         self.mainlayout = MDBoxLayout(orientation = "vertical")
         self.tabs = MDTabs()
 
-        """
-        self.homeTab = Tab(icon = "home", title = "Home")
-        self.homeTab.add_widget(HomeScreen())
-"""
+
         self.productTab = Tab(icon = "package-variant", title = "Products")
         self.productTab.add_widget(ProductScreen())
 
         self.resourceTab = Tab(icon = "factory", title = "Resources")
         self.resourceTab.add_widget(ResourceScreen())
-        """
+        
         self.supplierTab = Tab(icon = "account-multiple-outline", title = "Suppliers")
-        self.supplierTab.add_widget(SupplierScreen())
+        self.supplierTab.add_widget(SupplierScreen())    
 
-        self.settingsTab = Tab(icon = "cog-box", title = "Settings")
-        self.settingsTab.add_widget(SettingScreen())
-        """
+        self.categoryTab = Tab(icon = "cart", title = "Categories")
+        self.categoryTab.add_widget(CategoryScreen())  
+
+        self.employeeTab = Tab(icon = "account", title = "Employees")
+        self.employeeTab.add_widget(EmployeeScreen())
+
+        self.transactionTab = Tab(icon = "account", title = "Transaction")
+        self.transactionTab.add_widget(TransactionScreen())
+
 
         # self.tabs.add_widget(self.homeTab)
         self.tabs.add_widget(self.productTab)
         self.tabs.add_widget(self.resourceTab)
-        # self.tabs.add_widget(self.supplierTab)
+        self.tabs.add_widget(self.supplierTab)
+        self.tabs.add_widget(self.categoryTab)
+        self.tabs.add_widget(self.employeeTab)
+        self.tabs.add_widget(self.transactionTab)
         # self.tabs.add_widget(self.settingsTab)
 
         self.mainlayout.add_widget(self.tabs)

@@ -12,12 +12,12 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivy.metrics import dp
 from kivymd.uix.textfield import MDTextField
 
-from storage.models import Supplier, dbSession
+from storage.models import Category, dbSession
 
 
 kv = open("screens\\kv\\supplierScreen.kv").read()
 
-class RecordSupplierButton(MDFloatingActionButtonSpeedDial):
+class RecordCategoryButton(MDFloatingActionButtonSpeedDial):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.type = "standard"
@@ -52,7 +52,7 @@ class DataScreen(MDScreen):
         self.screenManager = MDScreenManager()
         self.innerScreen = MDScreen()
 
-        self.topbar = MDTopAppBar(title = "WareWise [Supplier Table]", left_action_items = [["card-account-details"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Category Table]", left_action_items = [["card-account-details"]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 
@@ -64,7 +64,7 @@ class DataScreen(MDScreen):
                 ("Name", dp(40)),
                 ("Contact Info",dp(40)),
             ],
-            row_data = [(supplier.name, supplier.contactInfo) for supplier in dbSession.query(Supplier).all()],
+            row_data = [(category.name, category.description,) for category in dbSession.query(Category).all()],
             elevation = 0,
             rows_num = 10
         )
@@ -95,19 +95,19 @@ class AddItemForm(MDBoxLayout):
 
         # * Data to be retrieved from the form
         self.nameData = None
-        self.contactInfoData = None
+        self.descriptionData = None
         
         # * The supplier name field in the form
-        self.nameField = FormField(hint_text = "Supplier Name", helper_text_mode = "persistent")
+        self.nameField = FormField(hint_text = "Category Name", helper_text_mode = "persistent")
         
         # * The resource type field in the form
         
         # * The address name field in the form
-        self.contactInfoField = FormField(hint_text = "Supplier Contact Info", helper_text_mode = "persistent")
+        self.descriptionField = FormField(hint_text = "Category Description", helper_text_mode = "persistent")
                
         
         self.add_widget(self.nameField)
-        self.add_widget(self.contactInfoField)
+        self.add_widget(self.descriptionField)
     
 
     def getData(self, instance):
@@ -116,24 +116,24 @@ class AddItemForm(MDBoxLayout):
         TODO properly implement this function
         """
         self.nameData = self.nameField.text
-        self.contactInfoData = self.contactInfoField.text
+        self.descriptionData = self.descriptionField.text
         
-        supplierToAdd = Supplier(name = self.nameData, contactInfo = self.contactInfoData)
+        categoryToAdd = Category(name = self.nameData, description = self.descriptionData)
 
-        dbSession.add(supplierToAdd)
+        dbSession.add(categoryToAdd)
         dbSession.commit()
 
-class SupplierScreen(MDScreen):
+class CategoryScreen(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
         self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}  
 
-        self.addSupplierForm = AddItemForm()
+        self.addCategoryForm = AddItemForm()
         self.addFormDialog = None
 
         self.dataScreen = DataScreen()
-        self.resourceButton = RecordSupplierButton(data = self.data, root_button_anim = True, hint_animation = True)
+        self.resourceButton = RecordCategoryButton(data = self.data, root_button_anim = True, hint_animation = True)
 
         self.add_widget(self.dataScreen)
         self.add_widget(self.resourceButton)
@@ -144,11 +144,11 @@ class SupplierScreen(MDScreen):
                 title ="Record Item",
                 size_hint = (1, 1),
                 type = "custom",
-                content_cls = self.addSupplierForm,
+                content_cls = self.addCategoryForm,
                 buttons = [MDRaisedButton(text = "SUBMIT", on_press = self.addTableRow)]
             )
         self.addFormDialog.open()
     
     def addTableRow(self, *args):
-        self.addSupplierForm.getData(*args)
-        self.dataScreen.table.row_data = [(supplier.name, supplier.contactInfo) for supplier in dbSession.query(Supplier).all()]
+        self.addCategoryForm.getData(*args)
+        self.dataScreen.table.row_data = [(category.name, category.description,) for category in dbSession.query(Category).all()]

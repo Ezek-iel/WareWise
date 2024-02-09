@@ -1,0 +1,5 @@
+.venv/
+
+# Python imports
+__pycache__/
+.pyc
