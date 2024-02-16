@@ -2,8 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from sqlalchemy import Integer, String, Column, DateTime, ForeignKey
 from datetime import datetime
+from typing import Any
 
-Base = declarative_base()
+Base : Any = declarative_base()
 
 Engine =  create_engine("sqlite:///database.db")
 

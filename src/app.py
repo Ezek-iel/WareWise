@@ -8,8 +8,12 @@ from screens.supplierScreen import SupplierScreen
 from screens.categoryScreen import CategoryScreen
 from screens.employeeScreen import EmployeeScreen
 from screens.transactionScreen import TransactionScreen
+from screens.customerScreen import CustomerScreen
+from screens.resourceTypeScreen import ResourceTypeScreen
+from screens.productTypeScreen import ProductTypeScreen
+from screens.storageScreen import StorageScreen
+from screens.orderScreen import OrderScreen
 
-from storage.models import Base, Engine
 from kivymd.uix.tab import MDTabs, MDTabsBase
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -47,7 +51,22 @@ class MainScreen(MDScreen):
         self.transactionTab = Tab(icon = "account", title = "Transaction")
         self.transactionTab.add_widget(TransactionScreen())
 
+        self.customerTab = Tab(icon = "account", title = "Customers")
+        self.customerTab.add_widget(CustomerScreen())
 
+        self.resourceTypeTab = Tab(icon = "account", title = "Resource Types")
+        self.resourceTypeTab.add_widget(ResourceTypeScreen())
+
+        self.productTypeTab = Tab(icon = "account", title = "Product Types")
+        self.productTypeTab.add_widget(ProductTypeScreen())
+
+        self.storageTab = Tab(icon = "account", title = "Storages")
+        self.storageTab.add_widget(StorageScreen())
+
+        self.orderTab = Tab(icon = "account", title = "Order")
+        self.orderTab.add_widget(OrderScreen())
+
+        
         # self.tabs.add_widget(self.homeTab)
         self.tabs.add_widget(self.productTab)
         self.tabs.add_widget(self.resourceTab)
@@ -55,6 +74,11 @@ class MainScreen(MDScreen):
         self.tabs.add_widget(self.categoryTab)
         self.tabs.add_widget(self.employeeTab)
         self.tabs.add_widget(self.transactionTab)
+        self.tabs.add_widget(self.customerTab)
+        self.tabs.add_widget(self.resourceTypeTab)
+        self.tabs.add_widget(self.productTypeTab)
+        self.tabs.add_widget(self.storageTab)
+        self.tabs.add_widget(self.orderTab)
         # self.tabs.add_widget(self.settingsTab)
 
         self.mainlayout.add_widget(self.tabs)

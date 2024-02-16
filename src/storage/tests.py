@@ -3,16 +3,20 @@ import models
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-Engine = create_engine("sqlite:///:memory:")
+Engine = create_engine("sqlite:///:memory:", echo=True)
 Session = sessionmaker(Engine)
 testsession = Session()
 
 
 class TestModels(unittest.TestCase):
-
-    def setUp(self):
+    
+    @classmethod
+    def setUpClass(cls):
         models.Base.metadata.create_all(Engine)
     
+    @classmethod
+    def tearDownClass(cls) -> None:
+        models.Base.metadata.drop_all(Engine)
 
     def test_product_category_relationship(self):
        
@@ -88,8 +92,6 @@ class TestModels(unittest.TestCase):
 
         self.assertIsInstance(testResource.resourceType, type(testResourceType))
 
-    def tearDown(self) -> None:
-        models.Base.metadata.drop_all(Engine)
 
 if __name__ == "__main__":
     unittest.main()
