@@ -52,7 +52,7 @@ class DataScreen(MDScreen):
         self.screenManager = MDScreenManager()
         self.innerScreen = MDScreen()
 
-        self.topbar = MDTopAppBar(title = "WareWise [Resource Type Table]", left_action_items = [["card-account-details"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Resource Type Table]", left_action_items = [[ResourceType.icon]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 
@@ -127,7 +127,7 @@ class ResourceTypeScreen(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}  
+        self.data = {"New Resource Type" : [ResourceType.icon,"on_press",self.open_dialog]}  
 
         self.addResourceTypeForm = AddItemForm()
         self.addFormDialog = None

@@ -57,13 +57,13 @@ class AddItemForm(MDBoxLayout):
         # * The product type field in the form
         self.productFieldLayout = MDBoxLayout(spacing = "7dp")
         self.productLabel = MDLabel(text = "Choose Product Type", pos_hint = {"center_y" : 0.2})
-        self.productField= MDFillRoundFlatIconButton(icon = "devices", text = "Product Type")
+        self.productField= MDFillRoundFlatIconButton(icon = ProductType.icon, text = "Product Type")
         self.productField.bind(on_press = self.productOptions)
 
          # * The category field in the form
         self.categoryFieldLayout = MDBoxLayout(spacing = "7dp")
         self.categoryLabel = MDLabel(text = "Choose Category", pos_hint = {"center_y" : 0.2})
-        self.categoryField= MDFillRoundFlatIconButton(icon = "devices", text = "Category")
+        self.categoryField= MDFillRoundFlatIconButton(icon = Category.icon, text = "Category")
         self.categoryField.bind(on_press = self.categoryOptions)
 
         
@@ -191,7 +191,7 @@ class DataScreen(MDScreen):
 
         self.tableLayout.add_widget(self.table)
         
-        self.topbar = MDTopAppBar(title = "WareWise [Products Table]", left_action_items = [["package-variant-closed-plus"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Products Table]", left_action_items = [[Product.icon]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 
@@ -212,7 +212,7 @@ class ProductScreen(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}  
+        self.data = {"New Product" : [Product.icon,"on_press",self.open_dialog]}  
 
         self.addProductForm = AddItemForm()
         self.addFormDialog = None

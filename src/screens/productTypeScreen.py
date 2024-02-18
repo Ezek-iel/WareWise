@@ -52,7 +52,7 @@ class DataScreen(MDScreen):
         self.screenManager = MDScreenManager()
         self.innerScreen = MDScreen()
 
-        self.topbar = MDTopAppBar(title = "WareWise [Product Type Table]", left_action_items = [["card-account-details"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Product Type Table]", left_action_items = [[ProductType.icon]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 
@@ -127,7 +127,7 @@ class ProductTypeScreen(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}  
+        self.data = {"New Product Type" : [ProductType.icon,"on_press",self.open_dialog]}  
 
         self.addProductTypeForm = AddItemForm()
         self.addFormDialog = None

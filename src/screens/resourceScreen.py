@@ -55,7 +55,7 @@ class AddItemForm(MDBoxLayout):
         # * The resource type field in the form
         self.resourceFieldLayout = MDBoxLayout(spacing = "7dp")
         self.resourceLabel = MDLabel(text = "Choose Resource Type", pos_hint = {"center_y" : 0.2})
-        self.resourceField= MDFillRoundFlatIconButton(icon = "devices", text = "Resource Types")
+        self.resourceField= MDFillRoundFlatIconButton(icon = ResourceType.icon, text = "Resource Types")
         self.resourceField.bind(on_press = self.resourceOptions)
 
         #* The name field in the form
@@ -72,7 +72,7 @@ class AddItemForm(MDBoxLayout):
         # * The category field in the form
         self.categoryFieldLayout = MDBoxLayout(spacing = "7dp")
         self.categoryLabel = MDLabel(text = "Choose Category", pos_hint = {"center_y" : 0.2})
-        self.supplierField = MDFillRoundFlatIconButton(icon = "account",text = "Supplier")
+        self.supplierField = MDFillRoundFlatIconButton(icon = Category.icon,text = "Supplier")
         self.supplierField.bind(on_press = self.categoryOptions)
 
         self.priceField = FormTextField(hint_text = "Resource price", helper_text_mode = "persistent")
@@ -173,7 +173,7 @@ class DataScreen(MDScreen):
 
         self.dataTable.add_widget(self.table)
         
-        self.topbar = MDTopAppBar(title = "WareWise [Resources Table]", left_action_items = [["cart-plus"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Resources Table]", left_action_items = [[Resource.icon]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
         
@@ -190,7 +190,7 @@ class ResourceScreen(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}  
+        self.data = {"New Resource" : [Resource.icon,"on_press",self.open_dialog]}  
 
         self.addResourceForm = AddItemForm()
         self.addFormDialog = None

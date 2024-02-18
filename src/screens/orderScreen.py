@@ -52,7 +52,7 @@ class DataScreen(MDScreen):
         self.screenManager = MDScreenManager()
         self.innerScreen = MDScreen()
 
-        self.topbar = MDTopAppBar(title = "WareWise [Order Table]", left_action_items = [["card-account-details"]])
+        self.topbar = MDTopAppBar(title = "WareWise [Order Table]", left_action_items = [[Order.icon]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 
@@ -104,7 +104,7 @@ class AddItemForm(MDBoxLayout):
         # * The supplier field in the form
         self.customerFieldLayout = MDBoxLayout(spacing = "7dp")
         self.customerLabel = MDLabel(text = "Choose Customer", pos_hint = {"center_y" : 0.2})
-        self.customerField= MDFillRoundFlatIconButton(icon = "devices", text = "Supplier")
+        self.customerField= MDFillRoundFlatIconButton(icon = Customer.icon, text = "Supplier")
         self.customerField.bind(on_press = self.customerOptions)
 
         self.customerFieldLayout.add_widget(self.customerLabel)
@@ -112,15 +112,15 @@ class AddItemForm(MDBoxLayout):
 
          # * The product field in the form
         self.productFieldLayout = MDBoxLayout(spacing = "7dp")
-        self.productLabel = MDLabel(text = "Choose product", pos_hint = {"center_y" : 0.2})
-        self.productField= MDFillRoundFlatIconButton(icon = "devices", text = "Category")
+        self.productLabel = MDLabel(text = "Choose Product", pos_hint = {"center_y" : 0.2})
+        self.productField= MDFillRoundFlatIconButton(icon = Product.icon, text = "Category")
         self.productField.bind(on_press = self.productOptions)
 
         self.productFieldLayout.add_widget(self.productField)
         self.productFieldLayout.add_widget(self.productLabel)
             
         # * The address name field in the form
-        self.quantityField = FormField(hint_text = "product Quantity", helper_text_mode = "persistent")
+        self.quantityField = FormField(hint_text = "Product Quantity", helper_text_mode = "persistent")
        
         
         self.add_widget(self.customerFieldLayout)
@@ -182,7 +182,7 @@ class OrderScreen(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}  
+        self.data = {"New Order" : [Order.icon,"on_press",self.open_dialog]}  
 
         self.addOrderForm = AddItemForm()
         self.addFormDialog = None

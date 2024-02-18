@@ -10,8 +10,9 @@ from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.button import MDFillRoundFlatIconButton, MDRaisedButton
 from kivymd.uix.toolbar import MDTopAppBar
 
-from storage.settings import getProductTypes, getResourceTypes, addProductType, addResourceType
+# from storage.settings import getProductTypes, getResourceTypes, addProductType, addResourceType
 
+# ! This file will soon be depreciated......... Since each model have a screen associated with it
 
 class OptionCard(MDCard):
     def __init__(self, text = None ,*args, **kwargs):

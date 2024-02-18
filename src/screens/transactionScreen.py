@@ -104,7 +104,7 @@ class AddItemForm(MDBoxLayout):
         # * The supplier field in the form
         self.supplierFieldLayout = MDBoxLayout(spacing = "7dp")
         self.supplierLabel = MDLabel(text = "Choose Supplier", pos_hint = {"center_y" : 0.2})
-        self.supplierField= MDFillRoundFlatIconButton(icon = "devices", text = "Supplier")
+        self.supplierField= MDFillRoundFlatIconButton(icon = Supplier.icon, text = "Supplier")
         self.supplierField.bind(on_press = self.supplierOptions)
 
         self.supplierFieldLayout.add_widget(self.supplierField)
@@ -113,7 +113,7 @@ class AddItemForm(MDBoxLayout):
          # * The resource field in the form
         self.resourceFieldLayout = MDBoxLayout(spacing = "7dp")
         self.resourceLabel = MDLabel(text = "Choose Resource", pos_hint = {"center_y" : 0.2})
-        self.resourceField= MDFillRoundFlatIconButton(icon = "devices", text = "Category")
+        self.resourceField= MDFillRoundFlatIconButton(icon = Resource.icon, text = "Category")
         self.resourceField.bind(on_press = self.resourceOptions)
 
         self.resourceFieldLayout.add_widget(self.resourceField)
@@ -181,7 +181,7 @@ class TransactionScreen(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.data = {"New Product" : ["pencil","on_press",self.open_dialog]}  
+        self.data = {"New Tranaction" : [Transaction.icon,"on_press",self.open_dialog]}  
 
         self.addTransactionForm = AddItemForm()
         self.addFormDialog = None

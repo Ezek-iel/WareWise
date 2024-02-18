@@ -19,6 +19,8 @@ from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.screen import MDScreen
 
+from storage import models
+
 class Tab(MDFloatLayout, MDTabsBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,37 +35,37 @@ class MainScreen(MDScreen):
         self.tabs = MDTabs()
 
 
-        self.productTab = Tab(icon = "package-variant", title = "Products")
+        self.productTab = Tab(icon = models.Product.icon, title = "Products")
         self.productTab.add_widget(ProductScreen())
 
-        self.resourceTab = Tab(icon = "factory", title = "Resources")
+        self.resourceTab = Tab(icon = models.Resource.icon, title = "Resources")
         self.resourceTab.add_widget(ResourceScreen())
         
-        self.supplierTab = Tab(icon = "account-multiple-outline", title = "Suppliers")
+        self.supplierTab = Tab(icon = models.Supplier.icon, title = "Suppliers")
         self.supplierTab.add_widget(SupplierScreen())    
 
-        self.categoryTab = Tab(icon = "cart", title = "Categories")
+        self.categoryTab = Tab(icon = models.Category.icon, title = "Categories")
         self.categoryTab.add_widget(CategoryScreen())  
 
-        self.employeeTab = Tab(icon = "account", title = "Employees")
+        self.employeeTab = Tab(icon = models.Employee.icon, title = "Employees")
         self.employeeTab.add_widget(EmployeeScreen())
 
-        self.transactionTab = Tab(icon = "account", title = "Transaction")
+        self.transactionTab = Tab(icon = models.Transaction.icon, title = "Transaction")
         self.transactionTab.add_widget(TransactionScreen())
 
-        self.customerTab = Tab(icon = "account", title = "Customers")
+        self.customerTab = Tab(icon = models.Customer.icon, title = "Customers")
         self.customerTab.add_widget(CustomerScreen())
 
-        self.resourceTypeTab = Tab(icon = "account", title = "Resource Types")
+        self.resourceTypeTab = Tab(icon = models.ResourceType.icon, title = "Resource Types")
         self.resourceTypeTab.add_widget(ResourceTypeScreen())
 
-        self.productTypeTab = Tab(icon = "account", title = "Product Types")
+        self.productTypeTab = Tab(icon = models.ProductType.icon, title = "Product Types")
         self.productTypeTab.add_widget(ProductTypeScreen())
 
-        self.storageTab = Tab(icon = "account", title = "Storages")
+        self.storageTab = Tab(icon = models.Storage.icon, title = "Storages")
         self.storageTab.add_widget(StorageScreen())
 
-        self.orderTab = Tab(icon = "account", title = "Order")
+        self.orderTab = Tab(icon = models.Order.icon, title = "Order")
         self.orderTab.add_widget(OrderScreen())
 
         
