@@ -1,4 +1,3 @@
-from kivymd.uix.label import MDLabel
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.datatables import MDDataTable
@@ -6,9 +5,8 @@ from kivymd.uix.anchorlayout import MDAnchorLayout
 from kivymd.uix.toolbar import MDTopAppBar
 from kivymd.uix.navigationdrawer import MDNavigationLayout
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDFloatingActionButtonSpeedDial, MDFillRoundFlatIconButton, MDRaisedButton
+from kivymd.uix.button import MDFloatingActionButtonSpeedDial, MDRaisedButton
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.menu import MDDropdownMenu
 from kivy.metrics import dp
 from kivymd.uix.textfield import MDTextField
 
@@ -56,7 +54,7 @@ class DataScreen(MDScreen):
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
 
-        self.data_table = MDAnchorLayout(size_hint = (1, 0.9))
+        self.dataTableLayout = MDAnchorLayout(size_hint = (1, 0.9))
         self.table = MDDataTable(
             size_hint = (0.8,0.9),
             use_pagination = True,
@@ -69,9 +67,9 @@ class DataScreen(MDScreen):
             rows_num = 10
         )
 
-        self.data_table.add_widget(self.table)
+        self.dataTableLayout.add_widget(self.table)
         
-        self.innerScreen.add_widget(self.data_table)
+        self.innerScreen.add_widget(self.dataTableLayout)
         self.innerScreen.add_widget(self.topbar)
 
         self.screenManager.add_widget(self.innerScreen)

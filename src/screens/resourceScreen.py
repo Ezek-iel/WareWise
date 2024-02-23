@@ -1,5 +1,3 @@
-        #* All imports
-
 from kivymd.uix.label import MDLabel
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
@@ -153,8 +151,8 @@ class DataScreen(MDScreen):
         self.tableScreen = MDScreen()
         self.tableScreenLayout = MDBoxLayout(orientation = "vertical", padding = 20)
 
-        self.dataTable = MDAnchorLayout()
-        self.dataTable.size_hint = (1 , 0.9)
+        self.dataTableLayout = MDAnchorLayout()
+        self.dataTableLayout.size_hint = (1 , 0.9)
 
         self.table =  MDDataTable( 
             size_hint=(0.8, 0.9),
@@ -171,13 +169,13 @@ class DataScreen(MDScreen):
             elevation = 0,
         )
 
-        self.dataTable.add_widget(self.table)
+        self.dataTableLayout.add_widget(self.table)
         
         self.topbar = MDTopAppBar(title = "WareWise [Resources Table]", left_action_items = [[Resource.icon]])
         self.topbar.pos_hint = {"top" : 1}
         self.topbar.elevation = 2
         
-        self.tableScreenLayout.add_widget(self.dataTable)
+        self.tableScreenLayout.add_widget(self.dataTableLayout)
         self.tableScreen.add_widget(self.tableScreenLayout)
         self.tableScreen.add_widget(self.topbar)
         

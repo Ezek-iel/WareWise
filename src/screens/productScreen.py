@@ -1,6 +1,3 @@
-        #* All imports
-
-
 from kivymd.uix.label import MDLabel
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
@@ -138,7 +135,6 @@ class AddItemForm(MDBoxLayout):
     def getData(self, instance):
         """
         * Get all the required data from the form
-        //TODO properly implement this function
         """
         self.quantityData = self.quantityField.text
         self.priceData = self.priceField.text

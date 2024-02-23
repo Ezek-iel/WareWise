@@ -11,11 +11,22 @@ Engine =  create_engine("sqlite:///database.db")
 Session = sessionmaker(Engine)
 dbSession = Session()
 
-# Creating all models
+"""
+* Models are written in this format
+ModelName
+
+--> table_description <--
+
+--> table_attributes <--
+
+--> table_relationships <--
+"""
     
 class Category(Base):
+
     __tablename__ = "categories"
     icon = "vector-arrange-below"
+
     categoryId = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
@@ -27,8 +38,10 @@ class Category(Base):
         return f"Category {self.name}"
 
 class Product(Base):
+
     __tablename__ = "products"
     icon = "cart"
+
     productId = Column(Integer, primary_key=True)
     name = Column(String, nullable = False)
     unitPrice = Column(Integer, nullable=False)
@@ -46,8 +59,10 @@ class Product(Base):
         return f"Product <{self.name}>"
 
 class Resource(Base):
+
     icon = "diamond-stone"
     __tablename__ = "resources"
+
     resourceId = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     unitPrice = Column(Integer, nullable = False)
@@ -64,8 +79,10 @@ class Resource(Base):
         return f'Resource <{self.name}>'
 
 class Customer(Base):
+
     icon = "account"
     __tablename__ = "customers"
+
     customerId = Column(Integer, primary_key = True)
     name = Column(String, nullable=False)
     contactInfo = Column(String, nullable=False)
@@ -76,8 +93,10 @@ class Customer(Base):
         return f"Customer <{self.name}>"
 
 class Supplier(Base):
+
     icon = "account"
     __tablename__ = "suppliers"
+
     supplierId = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     contactInfo = Column(String, nullable=False)
@@ -88,8 +107,10 @@ class Supplier(Base):
         return f"Supplier <{self.name}>"
 
 class Storage(Base):
+
     icon = "warehouse"
     __tablename__ = "storages"
+    
     storageId = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     address = Column(String, nullable=False)
@@ -98,8 +119,10 @@ class Storage(Base):
         return f"Storage <{self.name}>"
 
 class Employee(Base):
+
     icon = "account"
     __tablename__ = "employees"
+    
     employeeId = Column(Integer, primary_key=True)
     name = Column(String, nullable = False)
     role = Column(String, nullable=False)
@@ -108,14 +131,14 @@ class Employee(Base):
         return f"Employee <{self.name}>"
 
 class Order(Base):
+    
     icon = "package-variant"
     __tablename__ = "orders"
+    
     orderId = Column(Integer, primary_key=True)
     date = Column(DateTime, default = datetime.utcnow())
-    
     customerId = Column(Integer, ForeignKey("customers.customerId"))
     productId = Column(Integer, ForeignKey("products.productId"))
-
     quantity = Column(Integer, default=1)
 
     customer = relationship('Customer', back_populates="orders")
@@ -125,6 +148,7 @@ class Order(Base):
         return f"Order <{self.orderId}, {self.date}>"
 
 class Transaction(Base):
+    
     icon = "card-account-details"
     __tablename__ = "transactions"
     
@@ -135,10 +159,10 @@ class Transaction(Base):
     resourceId = Column(Integer, ForeignKey("resources.resourceId"))
 
     supplier = relationship("Supplier", back_populates="transactions")
-
     resource = relationship("Resource", back_populates="transactions")
 
 class ProductType(Base):
+    
     icon = "cart-variant"
     __tablename__ = "product_types"
 
@@ -152,6 +176,7 @@ class ProductType(Base):
         return f'Product Type {self.name}'
 
 class ResourceType(Base):
+    
     icon = "diamond-stone"
     __tablename__ = "resource_types"
 

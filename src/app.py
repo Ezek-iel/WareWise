@@ -1,9 +1,7 @@
 from kivymd.app import MDApp
 
 from screens.productScreen import ProductScreen
-# from screens.homeScreen import HomeScreen
 from screens.resourceScreen import ResourceScreen
-# from screens.settingsScreen import SettingScreen
 from screens.supplierScreen import SupplierScreen
 from screens.categoryScreen import CategoryScreen
 from screens.employeeScreen import EmployeeScreen
@@ -69,7 +67,7 @@ class MainScreen(MDScreen):
         self.orderTab.add_widget(OrderScreen())
 
         
-        # self.tabs.add_widget(self.homeTab)
+
         self.tabs.add_widget(self.productTab)
         self.tabs.add_widget(self.resourceTab)
         self.tabs.add_widget(self.supplierTab)
@@ -81,7 +79,7 @@ class MainScreen(MDScreen):
         self.tabs.add_widget(self.productTypeTab)
         self.tabs.add_widget(self.storageTab)
         self.tabs.add_widget(self.orderTab)
-        # self.tabs.add_widget(self.settingsTab)
+
 
         self.mainlayout.add_widget(self.tabs)
         self.add_widget(self.mainlayout)
